@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ materia.nombre }}</title>
+</head>
+<body>
+    <header>
+        <h1>{{ materia.nombre }}</h1>
+        <a href="{% url 'lista_materias' %}">Volver a las materias</a>
+    </header>
+
+    <main>
+        {% if materia.descripcion %}
+            <p>{{ materia.descripcion }}</p>
+        {% endif %}
+
+        <h2>Temas de esta materia</h2>
+
+        {% if temas %}
+            <ul>
+                {% for tema in temas %}
+                    <li>
+                        <h3>{{ tema.nombre }}</h3>
+
+                        {% if tema.descripcion %}
+                            <p>{{ tema.descripcion }}</p>
+                        {% endif %}
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>Esta materia todavía no tiene temas registrados.</p>
+        {% endif %}
+    </main>
+</body>
+</html>

@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plataforma de Aprendizaje</title>
+</head>
+<body>
+
+    <header>
+        <h1>Plataforma de Aprendizaje</h1>
+        <p>Bienvenido a nuestra plataforma educativa.</p>
+    </header>
+
+    <main>
+        <section>
+            <h2>¿Qué es esta plataforma?</h2>
+
+            <p>
+                Es una plataforma educativa diseñada para evaluar el desempeño
+                académico de los estudiantes, identificar temas y habilidades
+                que necesitan reforzarse y orientar su práctica de aprendizaje.
+            </p>
+        </section>
+        <section>
+    <h2>Acceso a la plataforma</h2>
+
+    {% if user.is_authenticated %}
+        <p>Has iniciado sesión como {{ user.username }}.</p>
+        <p><a href="{% url 'perfil' %}">Ver mi perfil</a></p>
+
+        <form method="post" action="{% url 'cerrar_sesion' %}">
+            {% csrf_token %}
+            <button type="submit">Cerrar sesión</button>
+        </form>
+    {% else %}
+        <p><a href="{% url 'registro' %}">Crear una cuenta</a></p>
+        <p><a href="{% url 'login' %}">Iniciar sesión</a></p>
+    {% endif %}
+</section>
+
+        <section>
+            <h2>Áreas de evaluación</h2>
+
+            <ul>
+                <li>Comprensión lectora</li>
+                <li>Matemáticas</li>
+                <li>Memoria</li>
+                <li>Atención</li>
+            </ul>
+        </section>
+
+        <section>
+            <h2>¿Cómo funcionará?</h2>
+
+            <ol>
+                <li>El estudiante responderá evaluaciones.</li>
+                <li>La plataforma analizará sus respuestas.</li>
+                <li>Se mostrarán resultados por materia, tema y habilidad.</li>
+                <li>Se propondrán actividades para reforzar las áreas necesarias.</li>
+            </ol>
+        </section>
+
+        <section>
+            <h2>Acceso a la plataforma</h2>
+
+            <p>Próximamente podrás iniciar sesión o crear una cuenta.</p>
+        </section>
+        <section>
+    <h2>Área académica</h2>
+
+    <ul>
+        <li>
+            <a href="{% url 'lista_materias' %}">
+                Consultar materias
+            </a>
+        </li>
+
+        <li>
+            <a href="{% url 'lista_habilidades' %}">
+                Consultar habilidades
+            </a>
+        </li>
+    </ul>
+</section>
+    </main>
+
+    <footer>
+        <p>Plataforma de Aprendizaje - Proyecto educativo</p>
+    </footer>
+
+</body>
+</html>

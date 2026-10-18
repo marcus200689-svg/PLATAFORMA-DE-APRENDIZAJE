@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iniciar sesión</title>
+</head>
+<body>
+    <header>
+        <h1>Iniciar sesión</h1>
+        <a href="{% url 'inicio' %}">Volver al inicio</a>
+    </header>
+
+    <main>
+        {% if messages %}
+            {% for mensaje in messages %}
+                <p>{{ mensaje }}</p>
+            {% endfor %}
+        {% endif %}
+
+        <form method="post">
+            {% csrf_token %}
+
+            {{ formulario.non_field_errors }}
+
+            <p>
+                <label for="{{ formulario.username.id_for_label }}">
+                    Nombre de usuario:
+                </label>
+                {{ formulario.username }}
+                {{ formulario.username.errors }}
+            </p>
+
+            <p>
+                <label for="{{ formulario.password.id_for_label }}">
+                    Contraseña:
+                </label>
+                {{ formulario.password }}
+                {{ formulario.password.errors }}
+            </p>
+
+            <button type="submit">Entrar</button>
+        </form>
+
+        <p>¿No tienes una cuenta? <a href="{% url 'registro' %}">Regístrate</a></p>
+    </main>
+</body>
+</html>

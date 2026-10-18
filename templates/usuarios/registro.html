@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro de usuario</title>
+</head>
+<body>
+    <header>
+        <h1>Crear una cuenta</h1>
+        <a href="{% url 'inicio' %}">Volver al inicio</a>
+    </header>
+
+    <main>
+        <h2>Registro de estudiante o docente</h2>
+
+        {% if errores %}
+            <ul>
+                {% for error in errores %}
+                    <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+
+        <form method="post">
+            {% csrf_token %}
+
+            <p>
+                <label for="first_name">Nombre:</label>
+                <input type="text" id="first_name" name="first_name"
+                       value="{{ request.POST.first_name }}" maxlength="150">
+            </p>
+
+            <p>
+                <label for="last_name">Apellidos:</label>
+                <input type="text" id="last_name" name="last_name"
+                       value="{{ request.POST.last_name }}" maxlength="150">
+            </p>
+
+            <p>
+                <label for="username">Nombre de usuario:</label>
+                <input type="text" id="username" name="username"
+                       value="{{ request.POST.username }}" required maxlength="150">
+            </p>
+
+            <p>
+                <label for="email">Correo electrónico:</label>
+                <input type="email" id="email" name="email"
+                       value="{{ request.POST.email }}" required>
+            </p>
+
+            <p>
+                <label for="rol">Tipo de cuenta:</label>
+                <select id="rol" name="rol" required>
+                    <option value="">Selecciona una opción</option>
+                    <option value="estudiante">Estudiante</option>
+                    <option value="docente">Docente</option>
+                </select>
+            </p>
+
+            <p>
+                <label for="password">Contraseña:</label>
+                <input type="password" id="password" name="password"
+                       required minlength="8" autocomplete="new-password">
+            </p>
+
+            <p>
+                <label for="password_confirm">Confirmar contraseña:</label>
+                <input type="password" id="password_confirm"
+                       name="password_confirm" required minlength="8"
+                       autocomplete="new-password">
+            </p>
+
+            <button type="submit">Crear cuenta</button>
+        </form>
+
+        <p>¿Ya tienes una cuenta? <a href="{% url 'login' %}">Inicia sesión</a></p>
+    </main>
+</body>
+</html>

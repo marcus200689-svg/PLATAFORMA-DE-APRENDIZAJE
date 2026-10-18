@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Materias académicas</title>
+</head>
+<body>
+    <header>
+        <h1>Materias académicas</h1>
+        <nav>
+            <a href="{% url 'inicio' %}">Inicio</a> |
+            <a href="{% url 'lista_habilidades' %}">Habilidades</a>
+        </nav>
+    </header>
+
+    <main>
+        <h2>Materias disponibles</h2>
+
+        {% if materias %}
+            <ul>
+                {% for materia in materias %}
+                    <li>
+                        <h3>{{ materia.nombre }}</h3>
+
+                        {% if materia.descripcion %}
+                            <p>{{ materia.descripcion }}</p>
+                        {% endif %}
+
+                        <a href="{% url 'detalle_materia' materia.id %}">
+                            Consultar temas
+                        </a>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>Aún no hay materias registradas.</p>
+            <p>Agrega materias desde el panel administrativo.</p>
+        {% endif %}
+    </main>
+</body>
+</html>

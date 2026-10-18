@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Habilidades académicas</title>
+</head>
+<body>
+    <header>
+        <h1>Habilidades académicas</h1>
+        <nav>
+            <a href="{% url 'inicio' %}">Inicio</a> |
+            <a href="{% url 'lista_materias' %}">Materias</a>
+        </nav>
+    </header>
+
+    <main>
+        <h2>Habilidades registradas</h2>
+
+        {% if habilidades %}
+            <ul>
+                {% for habilidad in habilidades %}
+                    <li>
+                        <h3>{{ habilidad.nombre }}</h3>
+
+                        {% if habilidad.descripcion %}
+                            <p>{{ habilidad.descripcion }}</p>
+                        {% endif %}
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>Aún no hay habilidades registradas.</p>
+        {% endif %}
+    </main>
+</body>
+</html>
