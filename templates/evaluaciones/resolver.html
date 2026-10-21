@@ -1,0 +1,59 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ evaluacion.titulo }} | Plataforma de aprendizaje</title>
+</head>
+<body>
+    <h1>{{ evaluacion.titulo }}</h1>
+    <p><strong>Materia:</strong> {{ evaluacion.materia.nombre }}</p>
+
+    <p>
+        Las preguntas de esta evaluación pueden ser provisionales
+        mientras se preparan las preguntas definitivas del proyecto.
+    </p>
+
+    {% if preguntas %}
+        <form method="post"
+              action="{% url 'evaluaciones:enviar' intento.id %}">
+            {% csrf_token %}
+
+            {% for pregunta in preguntas %}
+                <fieldset>
+                    <legend>
+                        Pregunta {{ forloop.counter }}:
+                        {{ pregunta.enunciado }}
+                    </legend>
+
+                    {% if pregunta.es_provisional %}
+                        <p><em>Pregunta provisional</em></p>
+                    {% endif %}
+
+                    {% for opcion in pregunta.opciones.all %}
+                        <label>
+                            <input
+                                type="radio"
+                                name="pregunta_{{ pregunta.id }}"
+                                value="{{ opcion.id }}"
+                            >
+                            {{ opcion.texto }}
+                        </label>
+                        <br>
+                    {% empty %}
+                        <p>Esta pregunta todavía no tiene opciones.</p>
+                    {% endfor %}
+                </fieldset>
+                <br>
+            {% endfor %}
+
+            <button type="submit">Enviar respuestas y calificar</button>
+        </form>
+    {% else %}
+        <p>Esta evaluación no tiene preguntas activas.</p>
+    {% endif %}
+
+    <p><a href="{% url 'evaluaciones:lista' %}">Volver a evaluaciones</a></p>
+</body>
+</html>

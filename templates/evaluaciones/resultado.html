@@ -1,0 +1,58 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resultado | Plataforma de aprendizaje</title>
+</head>
+<body>
+    <h1>Resultado de la evaluación</h1>
+
+    <h2>{{ intento.evaluacion.titulo }}</h2>
+    <p><strong>Materia:</strong> {{ intento.evaluacion.materia.nombre }}</p>
+
+    {% if intento.finalizado %}
+        <p>
+            <strong>Puntaje obtenido:</strong>
+            {{ intento.puntaje_obtenido }}
+        </p>
+
+        <p>
+            <strong>Porcentaje:</strong>
+            {{ intento.porcentaje }}%
+        </p>
+    {% else %}
+        <p>Esta evaluación todavía no ha sido finalizada.</p>
+    {% endif %}
+
+    <h3>Detalle de las respuestas</h3>
+
+    {% for respuesta in respuestas %}
+        <section>
+            <p><strong>{{ respuesta.pregunta.enunciado }}</strong></p>
+
+            {% if respuesta.opcion_seleccionada %}
+                <p>
+                    Tu respuesta:
+                    {{ respuesta.opcion_seleccionada.texto }}
+                </p>
+
+                {% if respuesta.es_correcta %}
+                    <p>Respuesta correcta.</p>
+                {% else %}
+                    <p>Respuesta incorrecta.</p>
+                {% endif %}
+            {% else %}
+                <p>Pregunta sin responder.</p>
+            {% endif %}
+        </section>
+        <hr>
+    {% empty %}
+        <p>No hay respuestas registradas para este intento.</p>
+    {% endfor %}
+
+    <p><a href="{% url 'evaluaciones:lista' %}">Volver a evaluaciones</a></p>
+    <p><a href="/">Volver al inicio</a></p>
+</body>
+</html>

@@ -1,0 +1,40 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Evaluaciones | Plataforma de aprendizaje</title>
+</head>
+<body>
+    <h1>Evaluaciones disponibles</h1>
+    <p>Selecciona una evaluación para comenzar.</p>
+
+    {% if messages %}
+        {% for message in messages %}
+            <p>{{ message }}</p>
+        {% endfor %}
+    {% endif %}
+
+    {% if evaluaciones %}
+        {% for evaluacion in evaluaciones %}
+            <section>
+                <h2>{{ evaluacion.titulo }}</h2>
+                <p><strong>Materia:</strong> {{ evaluacion.materia.nombre }}</p>
+                <p>{{ evaluacion.descripcion|default:"Sin descripción." }}</p>
+
+                <form method="post"
+                      action="{% url 'evaluaciones:iniciar' evaluacion.id %}">
+                    {% csrf_token %}
+                    <button type="submit">Comenzar evaluación</button>
+                </form>
+            </section>
+            <hr>
+        {% endfor %}
+    {% else %}
+        <p>Por el momento no hay evaluaciones disponibles.</p>
+    {% endif %}
+
+    <p><a href="/">Volver al inicio</a></p>
+</body>
+</html>

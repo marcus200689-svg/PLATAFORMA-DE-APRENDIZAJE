@@ -19,6 +19,9 @@ urlpatterns = [
         usuarios_views.cerrar_sesion,
         name="cerrar_sesion",
     ),
+    path(
+    "evaluaciones/",
+    include("apps.evaluaciones.urls"),),
 
     # Módulo académico
     path("academico/", include("apps.academico.urls")),
