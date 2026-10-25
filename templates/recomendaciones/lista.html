@@ -1,0 +1,195 @@
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mis recomendaciones | Plataforma de Aprendizaje</title>
+    <link rel="stylesheet" href="{% static 'css/estilos.css' %}">
+</head>
+<body class="pagina-recomendaciones">
+
+    <header class="encabezado">
+        <a href="{% url 'inicio' %}" class="marca">
+            <span class="marca-icono">PA</span>
+            <span>Plataforma de Aprendizaje</span>
+        </a>
+
+        <nav class="navegacion-recomendaciones">
+            <a href="{% url 'evaluaciones:lista' %}" class="enlace-volver">
+                Evaluaciones
+            </a>
+            <a href="{% url 'resultados:lista' %}" class="enlace-volver">
+                Mis resultados
+            </a>
+        </nav>
+    </header>
+
+    <main class="contenedor-recomendaciones">
+
+        <section class="recomendaciones-banner">
+            <span class="etiqueta">Tu siguiente paso</span>
+
+            <h1>Mis recomendaciones de aprendizaje</h1>
+
+            <p>
+                Consulta sugerencias personalizadas que pueden ayudarte
+                a reforzar los temas y habilidades evaluados y continuar
+                avanzando en tu aprendizaje.
+            </p>
+
+            {% if recomendaciones %}
+                <div class="contador-recomendaciones">
+                    <span class="contador-numero">
+                        {{ recomendaciones|length }}
+                    </span>
+                    <span>
+                        recomendación{{ recomendaciones|length|pluralize:"es" }}
+                        disponible{{ recomendaciones|length|pluralize:"s" }}
+                    </span>
+                </div>
+            {% endif %}
+        </section>
+
+        {% if recomendaciones %}
+
+            <section class="seccion-lista-recomendaciones">
+                <div class="titulo-seccion-recomendaciones">
+                    <div>
+                        <h2>Recomendaciones para ti</h2>
+                        <p>Revisa cada sugerencia y trabaja en tus áreas de mejora.</p>
+                    </div>
+                </div>
+
+                <div class="rejilla-recomendaciones">
+
+                    {% for recomendacion in recomendaciones %}
+                        <article class="tarjeta-recomendacion">
+
+                            <div class="recomendacion-cabecera">
+                                <span class="icono-recomendacion" aria-hidden="true">
+                                    {% if recomendacion.get_tipo_display == "Tema" %}
+                                        📘
+                                    {% elif recomendacion.get_tipo_display == "Habilidad" %}
+                                        🎯
+                                    {% else %}
+                                        💡
+                                    {% endif %}
+                                </span>
+
+                                <span class="prioridad-recomendacion
+                                    {% if recomendacion.get_prioridad_display == 'Alta' %}
+                                        prioridad-alta
+                                    {% elif recomendacion.get_prioridad_display == 'Media' %}
+                                        prioridad-media
+                                    {% else %}
+                                        prioridad-normal
+                                    {% endif %}">
+                                    Prioridad: {{ recomendacion.get_prioridad_display }}
+                                </span>
+                            </div>
+
+                            <h2>{{ recomendacion.titulo }}</h2>
+
+                            <div class="datos-recomendacion">
+                                <span class="tipo-recomendacion">
+                                    {{ recomendacion.get_tipo_display }}
+                                </span>
+                            </div>
+
+                            <p class="descripcion-recomendacion">
+                                {{ recomendacion.descripcion }}
+                            </p>
+
+                            {% if recomendacion.porcentaje_referencia != None %}
+                                <div class="referencia-recomendacion">
+                                    <span>Resultado de referencia</span>
+                                    <strong>
+                                        {{ recomendacion.porcentaje_referencia }}%
+                                    </strong>
+                                </div>
+                            {% endif %}
+
+                            <div class="detalles-recomendacion">
+
+                                <div class="detalle-recomendacion">
+                                    <span class="detalle-icono" aria-hidden="true">📝</span>
+                                    <div>
+                                        <span class="detalle-etiqueta">Evaluación</span>
+                                        <strong>
+                                            {{ recomendacion.intento.evaluacion.titulo }}
+                                        </strong>
+                                    </div>
+                                </div>
+
+                                {% if recomendacion.tema %}
+                                    <div class="detalle-recomendacion">
+                                        <span class="detalle-icono" aria-hidden="true">📚</span>
+                                        <div>
+                                            <span class="detalle-etiqueta">Tema relacionado</span>
+                                            <strong>{{ recomendacion.tema.nombre }}</strong>
+                                        </div>
+                                    </div>
+                                {% endif %}
+
+                                {% if recomendacion.habilidad %}
+                                    <div class="detalle-recomendacion">
+                                        <span class="detalle-icono" aria-hidden="true">🎯</span>
+                                        <div>
+                                            <span class="detalle-etiqueta">Habilidad relacionada</span>
+                                            <strong>{{ recomendacion.habilidad.nombre }}</strong>
+                                        </div>
+                                    </div>
+                                {% endif %}
+
+                            </div>
+
+                        </article>
+                    {% endfor %}
+
+                </div>
+            </section>
+
+        {% else %}
+
+            <section class="estado-vacio-recomendaciones">
+                <div class="vacio-icono" aria-hidden="true">💡</div>
+                <h2>Aún no tienes recomendaciones</h2>
+                <p>
+                    Completa una evaluación para obtener sugerencias
+                    basadas en tus resultados y descubrir qué temas
+                    o habilidades puedes reforzar.
+                </p>
+                <a href="{% url 'evaluaciones:lista' %}" class="boton boton-principal">
+                    Ver evaluaciones
+                </a>
+            </section>
+
+        {% endif %}
+
+        <section class="acciones-recomendaciones">
+            <a href="{% url 'evaluaciones:lista' %}" class="boton boton-principal">
+                Realizar una evaluación
+            </a>
+
+            <a href="{% url 'resultados:lista' %}" class="boton boton-secundario">
+                Consultar mis resultados
+            </a>
+
+            <a href="{% url 'inicio' %}" class="enlace-inicio-recomendaciones">
+                ← Volver al inicio
+            </a>
+        </section>
+
+    </main>
+
+    <footer class="pie-pagina">
+        <div class="pie-contenido">
+            <span>PA · Plataforma de Aprendizaje</span>
+            <span>Aprende, mejora y avanza.</span>
+        </div>
+    </footer>
+
+</body>
+</html>

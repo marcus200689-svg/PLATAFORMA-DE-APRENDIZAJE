@@ -1,6 +1,7 @@
 
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.core.exceptions import ValidationError
 from django.db import transaction
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views.decorators.http import require_POST
@@ -12,8 +13,9 @@ from .models import (
     Pregunta,
     RespuestaEstudiante,
 )
-from .services import finalizar_evaluacion
-
+from .services import finalizar_evaluacion, validar_evaluacion
+from apps.resultados.services import generar_resultados
+from apps.recomendaciones.services import generar_recomendaciones
 
 @login_required
 def lista_evaluaciones(request):
@@ -39,11 +41,11 @@ def iniciar_evaluacion(request, evaluacion_id):
         activa=True,
     )
 
-    if not evaluacion.preguntas.filter(activa=True).exists():
-        messages.error(
-            request,
-            "Esta evaluación todavía no tiene preguntas activas.",
-        )
+    try:
+        validar_evaluacion(evaluacion)
+    except ValidationError as error:
+        for mensaje in error.messages:
+            messages.error(request, mensaje)
         return redirect("evaluaciones:lista")
 
     intento = IntentoEvaluacion.objects.create(
@@ -60,7 +62,10 @@ def iniciar_evaluacion(request, evaluacion_id):
 @login_required
 def resolver_evaluacion(request, intento_id):
     intento = get_object_or_404(
-        IntentoEvaluacion.objects.select_related("evaluacion", "evaluacion__materia"),
+        IntentoEvaluacion.objects.select_related(
+            "evaluacion",
+            "evaluacion__materia",
+        ),
         pk=intento_id,
         estudiante=request.user,
     )
@@ -128,16 +133,30 @@ def enviar_respuestas(request, intento_id):
         RespuestaEstudiante.objects.update_or_create(
             intento=intento,
             pregunta=pregunta,
-            defaults={"opcion_seleccionada": opcion},
+            defaults={
+                "opcion_seleccionada": opcion,
+            },
         )
 
-    finalizar_evaluacion(intento)
-
+    try:
+        finalizar_evaluacion(intento)
+        generar_resultados(intento.pk)
+        generar_recomendaciones(intento.pk)
+        
+    except ValidationError as error:
+        transaction.set_rollback(True)
+        
+        for mensaje in error.messages:
+            messages.error(request, mensaje)
+            
+            return redirect("evaluaciones:resolver",intento_id=intento.pk,
+            
+            )
+            
     messages.success(
         request,
-        "Tu evaluación se envió y calificó correctamente.",
+        "Tu evaluación se calificó y los resultados fueron generados correctamente.",
     )
-
     return redirect(
         "evaluaciones:resultado",
         intento_id=intento.pk,

@@ -2,7 +2,7 @@
 from django.urls import path
 
 from . import views
-
+from . import profesor_views
 
 app_name = "evaluaciones"
 
@@ -31,5 +31,18 @@ urlpatterns = [
         "intento/<int:intento_id>/resultado/",
         views.resultado_evaluacion,
         name="resultado",
+    ),
+    path(
+        "profesor/",
+        profesor_views.profesor_lista_evaluaciones,
+        name="profesor_lista",),
+    path(
+        "profesor/crear/",
+        profesor_views.profesor_crear_evaluacion,
+        name="profesor_crear",),
+    path(
+        "profesor/<int:evaluacion_id>/editar/",
+        profesor_views.profesor_editar_evaluacion,
+        name="profesor_editar",
     ),
 ]

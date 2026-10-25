@@ -1,42 +1,160 @@
+
+{% load static %}
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Materias académicas</title>
+    <title>Materias académicas | Plataforma de Aprendizaje</title>
+    <link rel="stylesheet" href="{% static 'css/estilos.css' %}">
 </head>
-<body>
-    <header>
-        <h1>Materias académicas</h1>
-        <nav>
-            <a href="{% url 'inicio' %}">Inicio</a> |
-            <a href="{% url 'lista_habilidades' %}">Habilidades</a>
+
+<body class="pagina-materias">
+
+    <header class="encabezado">
+        <a href="{% url 'inicio' %}" class="marca">
+            <span class="marca-icono">PA</span>
+            <span>Plataforma de <strong>Aprendizaje</strong></span>
+        </a>
+
+        <nav class="navegacion-materias">
+            <a href="{% url 'inicio' %}" class="enlace-volver">
+                ← Inicio
+            </a>
+            <a href="{% url 'lista_habilidades' %}" class="enlace-volver">
+                Habilidades
+            </a>
         </nav>
     </header>
 
-    <main>
-        <h2>Materias disponibles</h2>
+    <main class="contenedor contenedor-materias">
 
-        {% if materias %}
-            <ul>
-                {% for materia in materias %}
-                    <li>
-                        <h3>{{ materia.nombre }}</h3>
+        <section class="materias-banner">
+            <div class="materias-banner-texto">
+                <span class="etiqueta">TU ESPACIO DE APRENDIZAJE</span>
+                <h1>Materias académicas</h1>
+                <p>
+                    Organiza tus estudios, explora las asignaturas y consulta
+                    los temas disponibles para continuar aprendiendo.
+                </p>
+            </div>
 
-                        {% if materia.descripcion %}
-                            <p>{{ materia.descripcion }}</p>
+            <div class="materias-banner-icono" aria-hidden="true">
+                📚
+            </div>
+        </section>
+
+        <section class="seccion-materias">
+
+            <div class="titulo-seccion">
+                <div>
+                    <h2>Materias disponibles</h2>
+                    <p>
+                        Selecciona una materia para consultar sus contenidos.
+                    </p>
+                </div>
+
+                {% if materias %}
+                    <span class="contador-materias">
+                        {{ materias|length }}
+                        {% if materias|length == 1 %}
+                            materia
+                        {% else %}
+                            materias
                         {% endif %}
+                    </span>
+                {% endif %}
+            </div>
 
-                        <a href="{% url 'detalle_materia' materia.id %}">
-                            Consultar temas
-                        </a>
-                    </li>
-                {% endfor %}
-            </ul>
-        {% else %}
-            <p>Aún no hay materias registradas.</p>
-            <p>Agrega materias desde el panel administrativo.</p>
-        {% endif %}
+            {% if materias %}
+
+                <div class="rejilla-materias">
+                    {% for materia in materias %}
+                        <article class="tarjeta-materia">
+
+                            <div class="materia-icono-lista" aria-hidden="true">
+                                {% if forloop.counter|divisibleby:3 %}
+                                    🧠
+                                {% elif forloop.counter|divisibleby:2 %}
+                                    💡
+                                {% else %}
+                                    📘
+                                {% endif %}
+                            </div>
+
+                            <div class="materia-contenido">
+                                <span class="materia-etiqueta">
+                                    MATERIA {{ forloop.counter|stringformat:"02d" }}
+                                </span>
+
+                                <h3>{{ materia.nombre }}</h3>
+
+                                {% if materia.descripcion %}
+                                    <p>{{ materia.descripcion }}</p>
+                                {% else %}
+                                    <p>
+                                        Consulta los temas de esta materia
+                                        y continúa con tu aprendizaje.
+                                    </p>
+                                {% endif %}
+
+                                <a href="{% url 'detalle_materia' materia.id %}"
+                                   class="boton boton-principal boton-consultar">
+                                    Consultar temas
+                                    <span aria-hidden="true">→</span>
+                                </a>
+                            </div>
+
+                        </article>
+                    {% endfor %}
+                </div>
+
+            {% else %}
+
+                <div class="estado-vacio-materias">
+                    <div class="vacio-materias-icono" aria-hidden="true">
+                        📚
+                    </div>
+
+                    <h3>Aún no hay materias registradas</h3>
+
+                    <p>
+                        Por el momento no hay materias disponibles.
+                        Cuando se registren, aparecerán en esta sección.
+                    </p>
+
+                    <div class="nota-administrativa">
+                        <span aria-hidden="true">ℹ️</span>
+                        <span>
+                            Si administras la plataforma, puedes agregar
+                            materias desde el panel administrativo de Django.
+                        </span>
+                    </div>
+
+                    <a href="{% url 'inicio' %}" class="boton boton-secundario">
+                        ← Volver al inicio
+                    </a>
+                </div>
+
+            {% endif %}
+
+        </section>
+
+        <div class="acciones-materias">
+            <a href="{% url 'lista_habilidades' %}"
+               class="boton boton-secundario">
+                Explorar habilidades →
+            </a>
+        </div>
+
     </main>
+
+    <footer class="pie-pagina">
+        <div class="pie-contenido">
+            <span>PA · Plataforma de Aprendizaje</span>
+            <p>Proyecto académico · Aprender para avanzar</p>
+        </div>
+    </footer>
+
 </body>
 </html>

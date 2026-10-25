@@ -1,0 +1,199 @@
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel del profesor | Plataforma de Aprendizaje</title>
+    <link rel="stylesheet" href="{% static 'css/estilos.css' %}">
+</head>
+<body>
+    <a href="{% url 'evaluaciones:profesor_lista' %}">
+    Administrar evaluaciones</a>
+    <a href="{% url 'evaluaciones:profesor_crear' %}">
+    Crear evaluación</a>
+    <div class="layout">
+        <aside class="sidebar">
+            <div class="brand">
+                <div class="brand-icon">PA</div>
+                <div>
+                    <strong>Plataforma</strong>
+                    <span>de Aprendizaje</span>
+                </div>
+            </div>
+
+            <p class="menu-label">MENÚ PRINCIPAL</p>
+
+            <nav class="menu">
+                <a class="menu-link active" href="{% url 'panel_profesor' %}">
+                    <span>⌂</span> Inicio
+                </a>
+                <a class="menu-link" href="{% url 'evaluaciones:lista' %}">
+                    <span>▤</span> Evaluaciones
+                </a>
+                <a class="menu-link" href="/admin/">
+                    <span>⚙</span> Administración técnica
+                </a>
+            </nav>
+
+            <div class="sidebar-bottom">
+                <span class="avatar">
+                    {{ request.user.username|first|upper }}
+                </span>
+                <div class="user-info">
+                    <strong>{{ request.user.get_full_name|default:request.user.username }}</strong>
+                    <span>Profesor / administrador</span>
+                </div>
+                <a class="logout" href="{% url 'cerrar_sesion' %}"
+                   title="Cerrar sesión">↗</a>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <header class="topbar">
+                <div>
+                    <p class="eyebrow">ESPACIO DOCENTE</p>
+                    <h1>Panel del profesor</h1>
+                    <p class="subtitle">
+                        Administra los recursos y las evaluaciones académicas.
+                    </p>
+                </div>
+                <div class="welcome">
+                    <span>Bienvenido/a,</span>
+                    <strong>{{ request.user.get_full_name|default:request.user.username }}</strong>
+                </div>
+            </header>
+
+            <section class="welcome-banner">
+                <div>
+                    <span class="banner-tag">TU ESPACIO DE TRABAJO</span>
+                    <h2>Organiza tus evaluaciones</h2>
+                    <p>
+                        Consulta la estructura académica y prepara las
+                        evaluaciones de la plataforma.
+                    </p>
+                </div>
+                <div class="banner-symbol">✦</div>
+            </section>
+
+            <section class="section">
+                <div class="section-heading">
+                    <div>
+                        <h2>Resumen general</h2>
+                        <p>Datos registrados actualmente en el sistema.</p>
+                    </div>
+                </div>
+
+                <div class="stats-grid">
+                    <article class="stat-card">
+                        <div class="stat-top">
+                            <span>Materias</span>
+                            <span class="stat-icon purple">▤</span>
+                        </div>
+                        <strong class="stat-number">{{ total_materias }}</strong>
+                        <span class="stat-description">Asignaturas registradas</span>
+                    </article>
+
+                    <article class="stat-card">
+                        <div class="stat-top">
+                            <span>Temas</span>
+                            <span class="stat-icon blue">◇</span>
+                        </div>
+                        <strong class="stat-number">{{ total_temas }}</strong>
+                        <span class="stat-description">Contenidos académicos</span>
+                    </article>
+
+                    <article class="stat-card">
+                        <div class="stat-top">
+                            <span>Habilidades</span>
+                            <span class="stat-icon green">◎</span>
+                        </div>
+                        <strong class="stat-number">{{ total_habilidades }}</strong>
+                        <span class="stat-description">Capacidades evaluables</span>
+                    </article>
+
+                    <article class="stat-card">
+                        <div class="stat-top">
+                            <span>Evaluaciones</span>
+                            <span class="stat-icon orange">✓</span>
+                        </div>
+                        <strong class="stat-number">{{ total_evaluaciones }}</strong>
+                        <span class="stat-description">Pruebas registradas</span>
+                    </article>
+
+                    <article class="stat-card">
+                        <div class="stat-top">
+                            <span>Preguntas</span>
+                            <span class="stat-icon pink">?</span>
+                        </div>
+                        <strong class="stat-number">{{ total_preguntas }}</strong>
+                        <span class="stat-description">Preguntas registradas</span>
+                    </article>
+                </div>
+            </section>
+
+            <section class="section">
+                <div class="section-heading">
+                    <div>
+                        <h2>Evaluaciones recientes</h2>
+                        <p>Últimas evaluaciones registradas en el sistema.</p>
+                    </div>
+                    <a class="text-link" href="{% url 'evaluaciones:lista' %}">
+                        Ver evaluaciones →
+                    </a>
+                </div>
+
+                <div class="table-card">
+                    {% if evaluaciones %}
+                        <div class="table-scroll">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Evaluación</th>
+                                        <th>Materia</th>
+                                        <th>Estado</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for evaluacion in evaluaciones %}
+                                    <tr>
+                                        <td>
+                                            <strong>{{ evaluacion.titulo }}</strong>
+                                            <span class="table-subtitle">
+                                                {{ evaluacion.descripcion|default:"Sin descripción"|truncatechars:65 }}
+                                            </span>
+                                        </td>
+                                        <td>{{ evaluacion.materia.nombre }}</td>
+                                        <td>
+                                            {% if evaluacion.activa %}
+                                                <span class="status active">Activa</span>
+                                            {% else %}
+                                                <span class="status inactive">Inactiva</span>
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% else %}
+                        <div class="empty-state">
+                            <div class="empty-icon">▤</div>
+                            <h3>Aún no hay evaluaciones</h3>
+                            <p>
+                                Cuando registres evaluaciones, aparecerán
+                                aquí para que puedas consultarlas.
+                            </p>
+                        </div>
+                    {% endif %}
+                </div>
+            </section>
+
+            <footer class="footer">
+                Plataforma de Aprendizaje · Panel docente
+            </footer>
+        </main>
+    </div>
+</body>
+</html>

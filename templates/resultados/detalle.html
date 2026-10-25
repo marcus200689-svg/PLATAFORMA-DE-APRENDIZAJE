@@ -1,0 +1,241 @@
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalle de resultados | Plataforma de Aprendizaje</title>
+    <link rel="stylesheet" href="{% static 'css/estilos.css' %}">
+</head>
+
+<body class="pagina-detalle-resultados">
+
+    <header class="encabezado">
+        <a href="{% url 'inicio' %}" class="marca">
+            <span class="marca-icono">PA</span>
+            <span>Plataforma de Aprendizaje</span>
+        </a>
+
+        <nav class="nav-detalle-resultados">
+            <a href="{% url 'resultados:lista' %}">Mis resultados</a>
+            <a href="{% url 'evaluaciones:lista' %}">Evaluaciones</a>
+        </nav>
+    </header>
+
+    <main class="contenedor-detalle-resultados">
+
+        <section class="banner-detalle-resultados">
+            <span class="etiqueta-resultados">Análisis de desempeño</span>
+
+            <h1>Detalle de resultados</h1>
+
+            <p class="nombre-evaluacion">
+                {{ intento.evaluacion.titulo }}
+            </p>
+
+            <p class="materia-evaluacion">
+                <span>Materia:</span>
+                {{ intento.evaluacion.materia.nombre }}
+            </p>
+
+            <div class="calificacion-principal">
+                <span class="calificacion-etiqueta">Calificación general</span>
+
+                <strong class="calificacion-numero">
+                    {{ intento.porcentaje }}%
+                </strong>
+
+                <div class="barra-calificacion">
+                    <div
+                        class="barra-calificacion-progreso"
+                        style="width: {% if intento.porcentaje > 100 %}100{% elif intento.porcentaje < 0 %}0{% else %}{{ intento.porcentaje }}{% endif %}%;">
+                    </div>
+                </div>
+
+                <span class="calificacion-ayuda">
+                    Resultado de tu evaluación
+                </span>
+            </div>
+        </section>
+
+        <!-- RESULTADO POR MATERIA -->
+        <section class="seccion-detalle-resultados">
+            <div class="encabezado-seccion-resultados">
+                <span class="icono-seccion-resultados">📘</span>
+                <div>
+                    <h2>Resultado por materia</h2>
+                    <p>Consulta tu desempeño general en la materia.</p>
+                </div>
+            </div>
+
+            {% if resultado_materia %}
+                <article class="tarjeta-resultado-materia">
+
+                    <div class="resultado-titulo-fila">
+                        <h3>{{ resultado_materia.materia.nombre }}</h3>
+                        <strong class="porcentaje-resultado">
+                            {{ resultado_materia.porcentaje }}%
+                        </strong>
+                    </div>
+
+                    <div class="barra-detalle">
+                        <div
+                            class="barra-detalle-progreso"
+                            style="width: {% if resultado_materia.porcentaje > 100 %}100{% elif resultado_materia.porcentaje < 0 %}0{% else %}{{ resultado_materia.porcentaje }}{% endif %}%;">
+                        </div>
+                    </div>
+
+                    <div class="puntaje-resultado">
+                        <span>Puntaje obtenido</span>
+                        <strong>
+                            {{ resultado_materia.puntaje_obtenido }}
+                            de {{ resultado_materia.puntaje_maximo }}
+                        </strong>
+                    </div>
+
+                </article>
+            {% else %}
+                <div class="aviso-sin-resultados">
+                    <span>ℹ️</span>
+                    <p>
+                        Este intento todavía no tiene resultados por materia
+                        generados.
+                    </p>
+                </div>
+            {% endif %}
+        </section>
+
+        <!-- RESULTADOS POR TEMA -->
+        <section class="seccion-detalle-resultados">
+            <div class="encabezado-seccion-resultados">
+                <span class="icono-seccion-resultados">📚</span>
+                <div>
+                    <h2>Resultados por tema</h2>
+                    <p>Identifica los temas que dominas y los que puedes reforzar.</p>
+                </div>
+            </div>
+
+            <div class="rejilla-detalle-resultados">
+                {% for resultado in resultados_temas %}
+                    <article class="tarjeta-detalle-resultado">
+
+                        <div class="tarjeta-detalle-cabecera">
+                            <span class="numero-resultado">
+                                {{ forloop.counter|stringformat:"02d" }}
+                            </span>
+
+                            <span class="etiqueta-tipo-resultado">Tema</span>
+                        </div>
+
+                        <h3>{{ resultado.tema.nombre }}</h3>
+
+                        <div class="porcentaje-fila">
+                            <span>Porcentaje obtenido</span>
+                            <strong>{{ resultado.porcentaje }}%</strong>
+                        </div>
+
+                        <div class="barra-detalle">
+                            <div
+                                class="barra-detalle-progreso"
+                                style="width: {% if resultado.porcentaje > 100 %}100{% elif resultado.porcentaje < 0 %}0{% else %}{{ resultado.porcentaje }}{% endif %}%;">
+                            </div>
+                        </div>
+
+                        <div class="puntaje-resultado">
+                            <span>Puntaje</span>
+                            <strong>
+                                {{ resultado.puntaje_obtenido }}
+                                de {{ resultado.puntaje_maximo }}
+                            </strong>
+                        </div>
+
+                    </article>
+                {% empty %}
+                    <div class="aviso-sin-resultados aviso-ancho-completo">
+                        <span>📚</span>
+                        <p>No hay resultados por tema disponibles.</p>
+                    </div>
+                {% endfor %}
+            </div>
+        </section>
+
+        <!-- RESULTADOS POR HABILIDAD -->
+        <section class="seccion-detalle-resultados">
+            <div class="encabezado-seccion-resultados">
+                <span class="icono-seccion-resultados">🎯</span>
+                <div>
+                    <h2>Resultados por habilidad</h2>
+                    <p>Revisa el desempeño de las habilidades evaluadas.</p>
+                </div>
+            </div>
+
+            <div class="rejilla-detalle-resultados">
+                {% for resultado in resultados_habilidades %}
+                    <article class="tarjeta-detalle-resultado">
+
+                        <div class="tarjeta-detalle-cabecera">
+                            <span class="numero-resultado">
+                                {{ forloop.counter|stringformat:"02d" }}
+                            </span>
+
+                            <span class="etiqueta-tipo-resultado">Habilidad</span>
+                        </div>
+
+                        <h3>{{ resultado.habilidad.nombre }}</h3>
+
+                        <div class="porcentaje-fila">
+                            <span>Porcentaje obtenido</span>
+                            <strong>{{ resultado.porcentaje }}%</strong>
+                        </div>
+
+                        <div class="barra-detalle">
+                            <div
+                                class="barra-detalle-progreso"
+                                style="width: {% if resultado.porcentaje > 100 %}100{% elif resultado.porcentaje < 0 %}0{% else %}{{ resultado.porcentaje }}{% endif %}%;">
+                            </div>
+                        </div>
+
+                        <div class="puntaje-resultado">
+                            <span>Puntaje</span>
+                            <strong>
+                                {{ resultado.puntaje_obtenido }}
+                                de {{ resultado.puntaje_maximo }}
+                            </strong>
+                        </div>
+
+                    </article>
+                {% empty %}
+                    <div class="aviso-sin-resultados aviso-ancho-completo">
+                        <span>🎯</span>
+                        <p>No hay resultados por habilidad disponibles.</p>
+                    </div>
+                {% endfor %}
+            </div>
+        </section>
+
+        <section class="acciones-detalle-resultados">
+            <a href="{% url 'resultados:lista' %}" class="boton boton-principal">
+                ← Volver a mis resultados
+            </a>
+
+            <a href="{% url 'evaluaciones:lista' %}" class="boton boton-secundario">
+                Ver evaluaciones
+            </a>
+
+            <a href="{% url 'inicio' %}" class="enlace-inicio-resultados">
+                Volver al inicio
+            </a>
+        </section>
+
+    </main>
+
+    <footer class="pie-pagina">
+        <div class="pie-contenido">
+            <span>PA · Plataforma de Aprendizaje</span>
+            <span>Aprende, evalúa y mejora.</span>
+        </div>
+    </footer>
+
+</body>
+</html>

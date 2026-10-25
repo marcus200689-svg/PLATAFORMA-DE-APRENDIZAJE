@@ -1,48 +1,118 @@
+
+{% load static %}
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Iniciar sesión</title>
+
+    <title>Iniciar sesión | Plataforma de Aprendizaje</title>
+
+    <link rel="stylesheet" href="{% static 'css/estilos.css' %}">
 </head>
-<body>
-    <header>
-        <h1>Iniciar sesión</h1>
-        <a href="{% url 'inicio' %}">Volver al inicio</a>
+
+<body class="pagina-login">
+
+    <header class="encabezado encabezado-login">
+        <a href="{% url 'inicio' %}" class="marca">
+            <span class="marca-icono">PA</span>
+            <span>Plataforma de <strong>Aprendizaje</strong></span>
+        </a>
+
+        <a href="{% url 'inicio' %}" class="enlace-volver">
+            <span aria-hidden="true">←</span> Volver al inicio
+        </a>
     </header>
 
-    <main>
-        {% if messages %}
-            {% for mensaje in messages %}
-                <p>{{ mensaje }}</p>
-            {% endfor %}
-        {% endif %}
+    <main class="contenedor-login">
 
-        <form method="post">
-            {% csrf_token %}
+        <section class="tarjeta-login">
 
-            {{ formulario.non_field_errors }}
+            <div class="login-icono" aria-hidden="true">
+                <span>👋</span>
+            </div>
 
-            <p>
-                <label for="{{ formulario.username.id_for_label }}">
-                    Nombre de usuario:
-                </label>
-                {{ formulario.username }}
-                {{ formulario.username.errors }}
+            <div class="login-titulo">
+                <span class="etiqueta">TU ESPACIO ACADÉMICO</span>
+                <h1>¡Qué bueno tenerte aquí!</h1>
+                <p>Inicia sesión para continuar con tu aprendizaje.</p>
+            </div>
+
+            {% if messages %}
+                <div class="mensajes-login" aria-live="polite">
+                    {% for mensaje in messages %}
+                        <p class="mensaje mensaje-{{ mensaje.tags|default:'info' }}">
+                            {{ mensaje }}
+                        </p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            <form method="post" class="formulario-login">
+                {% csrf_token %}
+
+                {% if formulario.non_field_errors %}
+                    <div class="errores-formulario" role="alert">
+                        {{ formulario.non_field_errors }}
+                    </div>
+                {% endif %}
+
+                <div class="campo-login">
+                    <label for="{{ formulario.username.id_for_label }}">
+                        Nombre de usuario
+                    </label>
+
+                    {{ formulario.username }}
+
+                    {% if formulario.username.errors %}
+                        <div class="error-campo" role="alert">
+                            {{ formulario.username.errors }}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div class="campo-login">
+                    <label for="{{ formulario.password.id_for_label }}">
+                        Contraseña
+                    </label>
+
+                    {{ formulario.password }}
+
+                    {% if formulario.password.errors %}
+                        <div class="error-campo" role="alert">
+                            {{ formulario.password.errors }}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <button type="submit" class="boton boton-principal boton-login">
+                    Entrar a mi cuenta
+                    <span aria-hidden="true">→</span>
+                </button>
+            </form>
+
+            <div class="separador-login">
+                <span>¿Primera vez en la plataforma?</span>
+            </div>
+
+            <a href="{% url 'registro' %}" class="boton boton-secundario boton-registro">
+                Crear una cuenta
+            </a>
+
+            <p class="texto-seguridad">
+                Tu espacio para aprender, avanzar y mejorar.
             </p>
 
-            <p>
-                <label for="{{ formulario.password.id_for_label }}">
-                    Contraseña:
-                </label>
-                {{ formulario.password }}
-                {{ formulario.password.errors }}
-            </p>
+        </section>
 
-            <button type="submit">Entrar</button>
-        </form>
-
-        <p>¿No tienes una cuenta? <a href="{% url 'registro' %}">Regístrate</a></p>
     </main>
+
+    <footer class="pie-pagina pie-login">
+        <div class="pie-contenido">
+            <span>PA · Plataforma de Aprendizaje</span>
+            <p>Proyecto académico · Aprender para avanzar</p>
+        </div>
+    </footer>
+
 </body>
 </html>

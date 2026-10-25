@@ -1,0 +1,119 @@
+[
+{
+  "model": "sessions.session",
+  "pk": "e7mj5xnz9n6qed8lron4wsgdff2zlzy1",
+  "fields": {
+    "session_data": ".eJxVjDsOwjAQBe_iGlmJnd3YlPScIfJ-jAPIkfKpEHeHSCmgfTPzXmZI21qGbdF5GMWcTWtOvxslfmjdgdxTvU2Wp7rOI9ldsQdd7HUSfV4O9--gpKV864BRGQg7TEyp914RyHnNgXxPHBsRlIgOEDQDeZCWY6cNsM8SXDbvD_bEOHc:1xKKFW:irJVyaMVn7TflhP1Nzv6aP9I7AyLTtQFkxTIR4dgLQI",
+    "expire_date": "2026-11-06T18:44:18.234Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "f58m108degr77f7j5wl58fm44q9a4dif",
+  "fields": {
+    "session_data": ".eJxVjDsOwjAQBe_iGlmJnd3YlPScIfJ-jAPIkfKpEHeHSCmgfTPzXmZI21qGbdF5GMWcTWtOvxslfmjdgdxTvU2Wp7rOI9ldsQdd7HUSfV4O9--gpKV864BRGQg7TEyp914RyHnNgXxPHBsRlIgOEDQDeZCWY6cNsM8SXDbvD_bEOHc:1xIHxB:B7sFAY8dGXrst5U5_dPioAFy-jLvRX4glbkN74zhluw",
+    "expire_date": "2026-11-01T03:52:57.678Z"
+  }
+},
+{
+  "model": "usuarios.usuario",
+  "fields": {
+    "password": "pbkdf2_sha256$1500000$qQD2jxIJj1FR6N2bTqkl3k$O3aHBryIKuA3rWxV2GyZJoHc2lXXl57TRPqqKrHqsqs=",
+    "last_login": "2026-10-23T18:44:18.226Z",
+    "is_superuser": true,
+    "username": "universidad",
+    "first_name": "",
+    "last_name": "",
+    "email": "universalone441@gmail.com",
+    "is_staff": true,
+    "is_active": true,
+    "date_joined": "2026-10-18T03:32:28.405Z",
+    "rol": "estudiante",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "academico.materia",
+  "pk": 1,
+  "fields": {
+    "nombre": "Matemáticas",
+    "descripcion": "prueba",
+    "activa": true,
+    "fecha_creacion": "2026-10-18T04:14:33.066Z"
+  }
+},
+{
+  "model": "academico.tema",
+  "pk": 1,
+  "fields": {
+    "materia": 1,
+    "nombre": "Álgebra",
+    "descripcion": "holka",
+    "activo": true
+  }
+},
+{
+  "model": "academico.habilidad",
+  "pk": 1,
+  "fields": {
+    "nombre": "Razonamiento",
+    "descripcion": "hola2",
+    "activa": true
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 1,
+  "fields": {
+    "action_time": "2026-10-18T04:14:33.089Z",
+    "user": [
+      "universidad"
+    ],
+    "content_type": [
+      "academico",
+      "materia"
+    ],
+    "object_id": "1",
+    "object_repr": "Matemáticas",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 2,
+  "fields": {
+    "action_time": "2026-10-18T04:15:14.508Z",
+    "user": [
+      "universidad"
+    ],
+    "content_type": [
+      "academico",
+      "tema"
+    ],
+    "object_id": "1",
+    "object_repr": "Matemáticas - Álgebra",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 3,
+  "fields": {
+    "action_time": "2026-10-18T04:15:34.235Z",
+    "user": [
+      "universidad"
+    ],
+    "content_type": [
+      "academico",
+      "habilidad"
+    ],
+    "object_id": "1",
+    "object_repr": "Razonamiento",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+}
+]

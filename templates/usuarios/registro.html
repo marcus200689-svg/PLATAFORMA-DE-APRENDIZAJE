@@ -1,80 +1,195 @@
+
+{% load static %}
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registro de usuario</title>
+
+    <title>Crear cuenta | Plataforma de Aprendizaje</title>
+
+    <link rel="stylesheet" href="{% static 'css/estilos.css' %}">
 </head>
-<body>
-    <header>
-        <h1>Crear una cuenta</h1>
-        <a href="{% url 'inicio' %}">Volver al inicio</a>
+
+<body class="pagina-registro">
+
+    <header class="encabezado">
+        <a href="{% url 'inicio' %}" class="marca">
+            <span class="marca-icono">PA</span>
+            <span>Plataforma de <strong>Aprendizaje</strong></span>
+        </a>
+
+        <a href="{% url 'inicio' %}" class="enlace-volver">
+            <span aria-hidden="true">←</span> Volver al inicio
+        </a>
     </header>
 
-    <main>
-        <h2>Registro de estudiante o docente</h2>
+    <main class="contenedor-registro">
 
-        {% if errores %}
-            <ul>
-                {% for error in errores %}
-                    <li>{{ error }}</li>
-                {% endfor %}
-            </ul>
-        {% endif %}
+        <section class="tarjeta-registro">
 
-        <form method="post">
-            {% csrf_token %}
+            <div class="registro-icono" aria-hidden="true">
+                <span>🎓</span>
+            </div>
 
-            <p>
-                <label for="first_name">Nombre:</label>
-                <input type="text" id="first_name" name="first_name"
-                       value="{{ request.POST.first_name }}" maxlength="150">
-            </p>
+            <div class="registro-titulo">
+                <span class="etiqueta">ÚNETE A NUESTRA COMUNIDAD</span>
+                <h1>Crea tu cuenta</h1>
+                <p>
+                    Regístrate para acceder a las herramientas
+                    de aprendizaje y seguimiento académico.
+                </p>
+            </div>
 
-            <p>
-                <label for="last_name">Apellidos:</label>
-                <input type="text" id="last_name" name="last_name"
-                       value="{{ request.POST.last_name }}" maxlength="150">
-            </p>
+            {% if errores %}
+                <div class="errores-registro" role="alert">
+                    <strong>Revisa la siguiente información:</strong>
+                    <ul>
+                        {% for error in errores %}
+                            <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endif %}
 
-            <p>
-                <label for="username">Nombre de usuario:</label>
-                <input type="text" id="username" name="username"
-                       value="{{ request.POST.username }}" required maxlength="150">
-            </p>
+            <form method="post" class="formulario-registro">
+                {% csrf_token %}
 
-            <p>
-                <label for="email">Correo electrónico:</label>
-                <input type="email" id="email" name="email"
-                       value="{{ request.POST.email }}" required>
-            </p>
+                <div class="registro-subtitulo">
+                    <span class="registro-numero">01</span>
+                    <h2>Información personal</h2>
+                </div>
 
-            <p>
-                <label for="rol">Tipo de cuenta:</label>
-                <select id="rol" name="rol" required>
-                    <option value="">Selecciona una opción</option>
-                    <option value="estudiante">Estudiante</option>
-                    <option value="docente">Docente</option>
-                </select>
-            </p>
+                <div class="registro-rejilla">
 
-            <p>
-                <label for="password">Contraseña:</label>
-                <input type="password" id="password" name="password"
-                       required minlength="8" autocomplete="new-password">
-            </p>
+                    <div class="campo-registro">
+                        <label for="first_name">Nombre</label>
+                        <input
+                            type="text"
+                            id="first_name"
+                            name="first_name"
+                            value="{{ request.POST.first_name }}"
+                            maxlength="150"
+                            autocomplete="given-name"
+                            placeholder="Escribe tu nombre">
+                    </div>
 
-            <p>
-                <label for="password_confirm">Confirmar contraseña:</label>
-                <input type="password" id="password_confirm"
-                       name="password_confirm" required minlength="8"
-                       autocomplete="new-password">
-            </p>
+                    <div class="campo-registro">
+                        <label for="last_name">Apellidos</label>
+                        <input
+                            type="text"
+                            id="last_name"
+                            name="last_name"
+                            value="{{ request.POST.last_name }}"
+                            maxlength="150"
+                            autocomplete="family-name"
+                            placeholder="Escribe tus apellidos">
+                    </div>
 
-            <button type="submit">Crear cuenta</button>
-        </form>
+                    <div class="campo-registro campo-completo">
+                        <label for="username">Nombre de usuario</label>
+                        <input
+                            type="text"
+                            id="username"
+                            name="username"
+                            value="{{ request.POST.username }}"
+                            required
+                            maxlength="150"
+                            autocomplete="username"
+                            placeholder="Elige un nombre de usuario">
+                        <small>Este nombre te permitirá identificarte en la plataforma.</small>
+                    </div>
 
-        <p>¿Ya tienes una cuenta? <a href="{% url 'login' %}">Inicia sesión</a></p>
+                    <div class="campo-registro campo-completo">
+                        <label for="email">Correo electrónico</label>
+                        <input
+                            type="email"
+                            id="email"
+                            name="email"
+                            value="{{ request.POST.email }}"
+                            required
+                            autocomplete="email"
+                            placeholder="ejemplo@correo.com">
+                    </div>
+
+                    <div class="campo-registro campo-completo">
+                        <label for="rol">Tipo de cuenta</label>
+                        <select id="rol" name="rol" required>
+                            <option value="">Selecciona tu tipo de cuenta</option>
+                            <option value="estudiante"
+                                {% if request.POST.rol == "estudiante" %}selected{% endif %}>
+                                Estudiante
+                            </option>
+                            <option value="docente"
+                                {% if request.POST.rol == "docente" %}selected{% endif %}>
+                                Docente
+                            </option>
+                        </select>
+                    </div>
+
+                </div>
+
+                <div class="registro-separador"></div>
+
+                <div class="registro-subtitulo">
+                    <span class="registro-numero">02</span>
+                    <h2>Seguridad de la cuenta</h2>
+                </div>
+
+                <div class="registro-rejilla">
+
+                    <div class="campo-registro campo-completo">
+                        <label for="password">Contraseña</label>
+                        <input
+                            type="password"
+                            id="password"
+                            name="password"
+                            required
+                            minlength="8"
+                            autocomplete="new-password"
+                            placeholder="Crea una contraseña">
+                        <small>Debe tener al menos 8 caracteres.</small>
+                    </div>
+
+                    <div class="campo-registro campo-completo">
+                        <label for="password_confirm">Confirmar contraseña</label>
+                        <input
+                            type="password"
+                            id="password_confirm"
+                            name="password_confirm"
+                            required
+                            minlength="8"
+                            autocomplete="new-password"
+                            placeholder="Escribe nuevamente tu contraseña">
+                    </div>
+
+                </div>
+
+                <button type="submit" class="boton boton-principal boton-registro-submit">
+                    Crear mi cuenta
+                    <span aria-hidden="true">→</span>
+                </button>
+
+                <p class="registro-nota">
+                    Comprueba que tus datos sean correctos antes de registrarte.
+                </p>
+            </form>
+
+            <div class="registro-pie">
+                <p>¿Ya tienes una cuenta?</p>
+                <a href="{% url 'login' %}">Inicia sesión aquí</a>
+            </div>
+
+        </section>
+
     </main>
+
+    <footer class="pie-pagina">
+        <div class="pie-contenido">
+            <span>PA · Plataforma de Aprendizaje</span>
+            <p>Proyecto académico · Aprender para avanzar</p>
+        </div>
+    </footer>
+
 </body>
 </html>

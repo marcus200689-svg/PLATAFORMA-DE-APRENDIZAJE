@@ -1,24 +1,27 @@
-from django.contrib import admin
 
-from apps.academico.models import Materia, Tema, Habilidad
+from django.contrib import admin
+from .models import Materia, Tema, Habilidad
 
 
 @admin.register(Materia)
 class MateriaAdmin(admin.ModelAdmin):
-    list_display = ("nombre", "activa", "fecha_creacion")
+    list_display = ("nombre", "activa")
+    search_fields = ("nombre",)
     list_filter = ("activa",)
-    search_fields = ("nombre", "descripcion")
+    ordering = ("nombre",)
 
 
 @admin.register(Tema)
 class TemaAdmin(admin.ModelAdmin):
-    list_display = ("nombre", "materia", "activo")
-    list_filter = ("materia", "activo")
+    list_display = ("nombre", "materia")
     search_fields = ("nombre", "materia__nombre")
+    list_filter = ("materia",)
+    ordering = ("materia__nombre", "nombre")
 
 
 @admin.register(Habilidad)
 class HabilidadAdmin(admin.ModelAdmin):
     list_display = ("nombre", "activa")
+    search_fields = ("nombre",)
     list_filter = ("activa",)
-    search_fields = ("nombre", "descripcion")
+    ordering = ("nombre",)

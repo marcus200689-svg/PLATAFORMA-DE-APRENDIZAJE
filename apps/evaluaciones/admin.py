@@ -1,6 +1,5 @@
 
 from django.contrib import admin
-
 from .models import (
     Evaluacion,
     Pregunta,
@@ -15,66 +14,41 @@ class OpcionRespuestaInline(admin.TabularInline):
     extra = 2
 
 
-class PreguntaInline(admin.TabularInline):
+class PreguntaInline(admin.StackedInline):
     model = Pregunta
     extra = 1
-    fields = (
-        "enunciado",
-        "tema",
-        "orden",
-        "puntaje",
-        "es_provisional",
-        "activa",
-    )
+    filter_horizontal = ("habilidades",)
     show_change_link = True
 
 
 @admin.register(Evaluacion)
 class EvaluacionAdmin(admin.ModelAdmin):
-    list_display = (
-        "titulo",
-        "materia",
-        "activa",
-        "fecha_creacion",
-    )
-    list_filter = ("materia", "activa")
-    search_fields = ("titulo", "descripcion")
+    list_display = ("titulo", "materia", "activa", "fecha_creacion")
+    list_filter = ("activa", "materia")
+    search_fields = ("titulo", "materia__nombre")
+    ordering = ("materia__nombre", "titulo")
     inlines = [PreguntaInline]
 
 
 @admin.register(Pregunta)
 class PreguntaAdmin(admin.ModelAdmin):
     list_display = (
-        "enunciado_resumido",
+        "enunciado",
         "evaluacion",
         "tema",
-        "orden",
         "puntaje",
         "es_provisional",
         "activa",
     )
-    list_filter = (
-        "evaluacion__materia",
-        "es_provisional",
-        "activa",
-    )
+    list_filter = ("activa", "es_provisional", "evaluacion")
     search_fields = ("enunciado", "evaluacion__titulo")
     filter_horizontal = ("habilidades",)
     inlines = [OpcionRespuestaInline]
 
-    @admin.display(description="Pregunta")
-    def enunciado_resumido(self, obj):
-        return obj.enunciado[:70]
-
 
 @admin.register(OpcionRespuesta)
 class OpcionRespuestaAdmin(admin.ModelAdmin):
-    list_display = (
-        "texto",
-        "pregunta",
-        "es_correcta",
-        "orden",
-    )
+    list_display = ("texto", "pregunta", "es_correcta", "orden")
     list_filter = ("es_correcta",)
     search_fields = ("texto", "pregunta__enunciado")
 
@@ -86,17 +60,15 @@ class IntentoEvaluacionAdmin(admin.ModelAdmin):
         "evaluacion",
         "fecha_inicio",
         "finalizado",
-        "puntaje_obtenido",
         "porcentaje",
     )
     list_filter = ("finalizado", "evaluacion")
-    search_fields = (
-        "estudiante__username",
-        "evaluacion__titulo",
-    )
+    search_fields = ("estudiante__username", "evaluacion__titulo")
     readonly_fields = (
         "fecha_inicio",
         "fecha_finalizacion",
+        "puntaje_obtenido",
+        "porcentaje",
     )
 
 
@@ -110,8 +82,4 @@ class RespuestaEstudianteAdmin(admin.ModelAdmin):
         "fecha_respuesta",
     )
     list_filter = ("es_correcta",)
-    search_fields = (
-        "pregunta__enunciado",
-        "intento__estudiante__username",
-    )
-    readonly_fields = ("fecha_respuesta",)
+    search_fields = ("pregunta__enunciado",)

@@ -1,93 +1,307 @@
+
+{% load static %}
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Plataforma de Aprendizaje</title>
-</head>
-<body>
 
-    <header>
-        <h1>Plataforma de Aprendizaje</h1>
-        <p>Bienvenido a nuestra plataforma educativa.</p>
+    <title>Plataforma de Aprendizaje</title>
+
+    <link rel="stylesheet" href="{% static 'css/estilos.css' %}">
+</head>
+
+<body>
+    <header class="encabezado">
+        <a href="/" class="marca">
+            <span class="marca-icono">PA</span>
+            <span>Plataforma de <strong>Aprendizaje</strong></span>
+        </a>
+
+        {% if user.is_authenticated %}
+            <div class="usuario-encabezado">
+                <span class="avatar">
+                    {{ user.username|first|upper }}
+                </span>
+                <span class="nombre-usuario">
+                    {{ user.username }}
+                </span>
+            </div>
+        {% else %}
+            <nav class="navegacion">
+                <a href="{% url 'login' %}" class="enlace-nav">
+                    Iniciar sesión
+                </a>
+                <a href="{% url 'registro' %}" class="boton boton-nav">
+                    Crear cuenta
+                </a>
+            </nav>
+        {% endif %}
     </header>
 
-    <main>
-        <section>
-            <h2>¿Qué es esta plataforma?</h2>
+    <main class="contenedor">
 
-            <p>
-                Es una plataforma educativa diseñada para evaluar el desempeño
-                académico de los estudiantes, identificar temas y habilidades
-                que necesitan reforzarse y orientar su práctica de aprendizaje.
-            </p>
-        </section>
-        <section>
-    <h2>Acceso a la plataforma</h2>
+        {% if user.is_authenticated %}
 
-    {% if user.is_authenticated %}
-        <p>Has iniciado sesión como {{ user.username }}.</p>
-        <p><a href="{% url 'perfil' %}">Ver mi perfil</a></p>
+            <section class="bienvenida">
+                <div class="bienvenida-contenido">
+                    <span class="etiqueta">MI ESPACIO ACADÉMICO</span>
 
-        <form method="post" action="{% url 'cerrar_sesion' %}">
-            {% csrf_token %}
-            <button type="submit">Cerrar sesión</button>
-        </form>
-    {% else %}
-        <p><a href="{% url 'registro' %}">Crear una cuenta</a></p>
-        <p><a href="{% url 'login' %}">Iniciar sesión</a></p>
-    {% endif %}
-</section>
+                    <h1>¡Hola, {{ user.username }}!</h1>
 
-        <section>
-            <h2>Áreas de evaluación</h2>
+                    <p>
+                        Cada paso cuenta. Continúa aprendiendo,
+                        descubre tus avances y alcanza tus objetivos académicos.
+                    </p>
+                </div>
 
-            <ul>
-                <li>Comprensión lectora</li>
-                <li>Matemáticas</li>
-                <li>Memoria</li>
-                <li>Atención</li>
-            </ul>
-        </section>
+                <div class="bienvenida-icono" aria-hidden="true">
+                    <span>📚</span>
+                </div>
+            </section>
 
-        <section>
-            <h2>¿Cómo funcionará?</h2>
+            <section class="seccion-principal">
+                <div class="titulo-seccion">
+                    <div>
+                        <h2>Tu espacio de aprendizaje</h2>
+                        <p>Selecciona una opción para continuar.</p>
+                    </div>
+                </div>
 
-            <ol>
-                <li>El estudiante responderá evaluaciones.</li>
-                <li>La plataforma analizará sus respuestas.</li>
-                <li>Se mostrarán resultados por materia, tema y habilidad.</li>
-                <li>Se propondrán actividades para reforzar las áreas necesarias.</li>
-            </ol>
-        </section>
+                <div class="rejilla-tarjetas">
 
-        <section>
-            <h2>Acceso a la plataforma</h2>
+                    <article class="tarjeta">
+                        <div class="tarjeta-icono icono-azul"
+                             aria-hidden="true">
+                            <span>📝</span>
+                        </div>
 
-            <p>Próximamente podrás iniciar sesión o crear una cuenta.</p>
-        </section>
-        <section>
-    <h2>Área académica</h2>
+                        <span class="tarjeta-etiqueta">
+                            EVALUACIÓN
+                        </span>
 
-    <ul>
-        <li>
-            <a href="{% url 'lista_materias' %}">
-                Consultar materias
-            </a>
-        </li>
+                        <h3>Mis evaluaciones</h3>
 
-        <li>
-            <a href="{% url 'lista_habilidades' %}">
-                Consultar habilidades
-            </a>
-        </li>
-    </ul>
-</section>
+                        <p>
+                            Consulta las evaluaciones disponibles
+                            y responde las preguntas asignadas.
+                        </p>
+
+                        <a href="{% url 'evaluaciones:lista' %}"
+                           class="enlace-tarjeta">
+                            Ver evaluaciones
+                            <span aria-hidden="true">→</span>
+                        </a>
+                    </article>
+
+                    <article class="tarjeta">
+                        <div class="tarjeta-icono icono-verde"
+                             aria-hidden="true">
+                            <span>📊</span>
+                        </div>
+
+                        <span class="tarjeta-etiqueta">
+                            SEGUIMIENTO
+                        </span>
+
+                        <h3>Mis resultados</h3>
+
+                        <p>
+                            Revisa tus calificaciones y tu desempeño
+                            por materia, tema y habilidad.
+                        </p>
+
+                        <a href="{% url 'resultados:lista' %}"
+                           class="enlace-tarjeta">
+                            Consultar resultados
+                            <span aria-hidden="true">→</span>
+                        </a>
+                    </article>
+
+                    <article class="tarjeta">
+                        <div class="tarjeta-icono icono-celeste"
+                             aria-hidden="true">
+                            <span>💡</span>
+                        </div>
+
+                        <span class="tarjeta-etiqueta">
+                            MEJORA CONTINUA
+                        </span>
+
+                        <h3>Recomendaciones</h3>
+
+                        <p>
+                            Descubre sugerencias para reforzar
+                            los temas y habilidades que necesitas practicar.
+                        </p>
+
+                        <a href="{% url 'recomendaciones:lista' %}"
+                           class="enlace-tarjeta">
+                            Ver recomendaciones
+                            <span aria-hidden="true">→</span>
+                        </a>
+                    </article>
+
+                    <article class="tarjeta">
+                        <div class="tarjeta-icono icono-morado"
+                             aria-hidden="true">
+                            <span>👤</span>
+                        </div>
+
+                        <span class="tarjeta-etiqueta">
+                            MI CUENTA
+                        </span>
+
+                        <h3>Mi perfil</h3>
+
+                        <p>
+                            Consulta tu perfil y revisa la información
+                            de tu cuenta.
+                        </p>
+
+                        <a href="{% url 'perfil' %}"
+                           class="enlace-tarjeta">
+                            Ver mi perfil
+                            <span aria-hidden="true">→</span>
+                        </a>
+                    </article>
+
+                </div>
+            </section>
+
+            <section class="panel-consejo">
+                <div class="consejo-icono" aria-hidden="true">🎯</div>
+                <div>
+                    <h3>Tu progreso comienza hoy</h3>
+                    <p>
+                        Realiza tus evaluaciones, revisa tus resultados
+                        y utiliza las recomendaciones para seguir mejorando.
+                    </p>
+                </div>
+            </section>
+
+            <div class="acciones-cuenta">
+                <form method="post" action="{% url 'cerrar_sesion' %}">
+                    {% csrf_token %}
+                    <button type="submit" class="boton boton-secundario">
+                        Cerrar sesión
+                    </button>
+                </form>
+            </div>
+
+        {% else %}
+
+            <section class="portada">
+                <div class="portada-contenido">
+                    <span class="etiqueta">
+                        APRENDE A TU PROPIO RITMO
+                    </span>
+
+                    <h1>
+                        Tu aprendizaje,<br>
+                        <span>a un paso del éxito.</span>
+                    </h1>
+
+                    <p>
+                        Evalúa tus conocimientos, descubre tus fortalezas
+                        e identifica las áreas en las que puedes mejorar.
+                        Construye tu camino hacia el éxito académico.
+                    </p>
+
+                    <div class="portada-acciones">
+                        <a href="{% url 'login' %}"
+                           class="boton boton-principal">
+                            Iniciar sesión
+                            <span aria-hidden="true">→</span>
+                        </a>
+
+                        <a href="{% url 'registro' %}"
+                           class="boton boton-secundario">
+                            Crear una cuenta
+                        </a>
+                    </div>
+
+                    <div class="portada-beneficios">
+                        <span>✓ Seguimiento académico</span>
+                        <span>✓ Evaluaciones</span>
+                        <span>✓ Recomendaciones</span>
+                    </div>
+                </div>
+
+                <div class="portada-visual" aria-hidden="true">
+                    <div class="circulo-decorativo"></div>
+
+                    <div class="ilustracion-libro">📚</div>
+
+                    <div class="nota-flotante nota-superior">
+                        <span class="nota-icono">✏️</span>
+                        <div>
+                            <strong>Aprende</strong>
+                            <small>A tu propio ritmo</small>
+                        </div>
+                    </div>
+
+                    <div class="nota-flotante nota-inferior">
+                        <span class="nota-icono">🎯</span>
+                        <div>
+                            <strong>Alcanza tus metas</strong>
+                            <small>Un paso a la vez</small>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="beneficios">
+                <div class="titulo-seccion titulo-centrado">
+                    <h2>Todo lo que necesitas para avanzar</h2>
+                    <p>
+                        Herramientas para acompañarte en tu aprendizaje.
+                    </p>
+                </div>
+
+                <div class="rejilla-tarjetas">
+
+                    <article class="tarjeta tarjeta-beneficio">
+                        <div class="tarjeta-icono icono-azul"
+                             aria-hidden="true">📝</div>
+                        <h3>Evalúa tus conocimientos</h3>
+                        <p>
+                            Accede a tus evaluaciones y comprueba
+                            lo que has aprendido.
+                        </p>
+                    </article>
+
+                    <article class="tarjeta tarjeta-beneficio">
+                        <div class="tarjeta-icono icono-verde"
+                             aria-hidden="true">📈</div>
+                        <h3>Conoce tus avances</h3>
+                        <p>
+                            Consulta tus resultados e identifica
+                            tus fortalezas académicas.
+                        </p>
+                    </article>
+
+                    <article class="tarjeta tarjeta-beneficio">
+                        <div class="tarjeta-icono icono-celeste"
+                             aria-hidden="true">💡</div>
+                        <h3>Mejora continuamente</h3>
+                        <p>
+                            Utiliza recomendaciones para reforzar
+                            tus conocimientos.
+                        </p>
+                    </article>
+
+                </div>
+            </section>
+
+        {% endif %}
     </main>
 
-    <footer>
-        <p>Plataforma de Aprendizaje - Proyecto educativo</p>
+    <footer class="pie-pagina">
+        <div class="pie-contenido">
+            <span>PA · Plataforma de Aprendizaje</span>
+            <p>Proyecto académico · Aprender para avanzar</p>
+        </div>
     </footer>
-
 </body>
 </html>

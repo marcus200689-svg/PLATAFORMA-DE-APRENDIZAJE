@@ -1,38 +1,148 @@
+
+{% load static %}
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ materia.nombre }}</title>
+
+    <title>{{ materia.nombre }} | Plataforma de Aprendizaje</title>
+
+    <link rel="stylesheet" href="{% static 'css/estilos.css' %}">
 </head>
-<body>
-    <header>
-        <h1>{{ materia.nombre }}</h1>
-        <a href="{% url 'lista_materias' %}">Volver a las materias</a>
+
+<body class="pagina-materia">
+
+    <header class="encabezado">
+        <a href="{% url 'inicio' %}" class="marca">
+            <span class="marca-icono">PA</span>
+            <span>Plataforma de <strong>Aprendizaje</strong></span>
+        </a>
+
+        <a href="{% url 'lista_materias' %}" class="enlace-volver">
+            <span aria-hidden="true">←</span> Volver a las materias
+        </a>
     </header>
 
-    <main>
-        {% if materia.descripcion %}
-            <p>{{ materia.descripcion }}</p>
-        {% endif %}
+    <main class="contenedor contenedor-materia">
 
-        <h2>Temas de esta materia</h2>
+        <section class="materia-banner">
+            <div class="materia-banner-contenido">
+                <span class="etiqueta">MI ESPACIO ACADÉMICO</span>
 
-        {% if temas %}
-            <ul>
-                {% for tema in temas %}
-                    <li>
-                        <h3>{{ tema.nombre }}</h3>
+                <h1>{{ materia.nombre }}</h1>
 
-                        {% if tema.descripcion %}
-                            <p>{{ tema.descripcion }}</p>
+                {% if materia.descripcion %}
+                    <p>{{ materia.descripcion }}</p>
+                {% else %}
+                    <p>
+                        Explora los temas disponibles y continúa
+                        avanzando en tu aprendizaje.
+                    </p>
+                {% endif %}
+            </div>
+
+            <div class="materia-banner-icono" aria-hidden="true">
+                📚
+            </div>
+        </section>
+
+        <section class="seccion-temas">
+
+            <div class="titulo-seccion">
+                <div>
+                    <h2>Temas de esta materia</h2>
+                    <p>
+                        Consulta los contenidos que forman parte
+                        de esta asignatura.
+                    </p>
+                </div>
+
+                {% if temas %}
+                    <span class="contador-temas">
+                        {{ temas|length }}
+                        {% if temas|length == 1 %}
+                            tema disponible
+                        {% else %}
+                            temas disponibles
                         {% endif %}
-                    </li>
-                {% endfor %}
-            </ul>
-        {% else %}
-            <p>Esta materia todavía no tiene temas registrados.</p>
-        {% endif %}
+                    </span>
+                {% endif %}
+            </div>
+
+            {% if temas %}
+
+                <div class="rejilla-temas">
+                    {% for tema in temas %}
+
+                        <article class="tarjeta-tema">
+
+                            <div class="tema-icono" aria-hidden="true">
+                                <span>📖</span>
+                            </div>
+
+                            <div class="tema-contenido">
+                                <span class="tema-etiqueta">
+                                    TEMA {{ forloop.counter|stringformat:"02d" }}
+                                </span>
+
+                                <h3>{{ tema.nombre }}</h3>
+
+                                {% if tema.descripcion %}
+                                    <p>{{ tema.descripcion }}</p>
+                                {% else %}
+                                    <p>
+                                        Consulta el contenido de este tema
+                                        para continuar aprendiendo.
+                                    </p>
+                                {% endif %}
+                            </div>
+
+                        </article>
+
+                    {% endfor %}
+                </div>
+
+            {% else %}
+
+                <div class="estado-vacio">
+                    <div class="vacio-icono" aria-hidden="true">
+                        📚
+                    </div>
+
+                    <h3>Aún no hay temas disponibles</h3>
+
+                    <p>
+                        Esta materia todavía no tiene temas registrados.
+                        Cuando se agreguen contenidos, aparecerán aquí.
+                    </p>
+
+                    <a href="{% url 'lista_materias' %}"
+                       class="boton boton-principal">
+                        Volver a las materias
+                    </a>
+                </div>
+
+            {% endif %}
+
+        </section>
+
+        <div class="materia-acciones">
+            <a href="{% url 'lista_materias' %}"
+               class="boton boton-secundario">
+                <span aria-hidden="true">←</span>
+                Regresar a todas las materias
+            </a>
+        </div>
+
     </main>
+
+    <footer class="pie-pagina">
+        <div class="pie-contenido">
+            <span>PA · Plataforma de Aprendizaje</span>
+            <p>Proyecto académico · Aprender para avanzar</p>
+        </div>
+    </footer>
+
 </body>
 </html>

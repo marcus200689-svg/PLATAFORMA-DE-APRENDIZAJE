@@ -64,10 +64,23 @@ WSGI_APPLICATION = "config.wsgi.application"
 # Más adelante configuraremos MySQL.
 DATABASES = {
     "default": {
+        "ENGINE": "django.db.backends.mysql",
+        "NAME": "plataforma_aprendizaje",
+        "USER": "root",
+        "PASSWORD": "mysql",
+        "HOST": "127.0.0.1",
+        "PORT": "3306",
+        "OPTIONS": {
+            "charset": "utf8mb4",
+        },
+    },
+    "sqlite_respaldo": {
         "ENGINE": "django.db.backends.sqlite3",
         "NAME": BASE_DIR / "db.sqlite3",
-    }
+    },
 }
+
+
 
 # Modelo de usuario personalizado
 AUTH_USER_MODEL = "usuarios.Usuario"
@@ -109,7 +122,10 @@ USE_I18N = True
 USE_TZ = True
 
 # Archivos estáticos
-STATIC_URL = "static/"
+STATIC_URL = 'static/'
+STATICFILES_DIRS = [
+    BASE_DIR / "static",
+]
 
 # Tipo de clave primaria por defecto
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"

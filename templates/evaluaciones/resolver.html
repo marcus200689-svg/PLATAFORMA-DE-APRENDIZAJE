@@ -1,59 +1,202 @@
 
+{% load static %}
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ evaluacion.titulo }} | Plataforma de aprendizaje</title>
+
+    <title>{{ evaluacion.titulo }} | Plataforma de Aprendizaje</title>
+
+    <link rel="stylesheet" href="{% static 'css/estilos.css' %}">
 </head>
-<body>
-    <h1>{{ evaluacion.titulo }}</h1>
-    <p><strong>Materia:</strong> {{ evaluacion.materia.nombre }}</p>
 
-    <p>
-        Las preguntas de esta evaluación pueden ser provisionales
-        mientras se preparan las preguntas definitivas del proyecto.
-    </p>
+<body class="pagina-resolver-evaluacion">
 
-    {% if preguntas %}
-        <form method="post"
-              action="{% url 'evaluaciones:enviar' intento.id %}">
-            {% csrf_token %}
+    <header class="encabezado">
+        <a href="{% url 'inicio' %}" class="marca">
+            <span class="marca-icono">PA</span>
+            <span>Plataforma de <strong>Aprendizaje</strong></span>
+        </a>
 
-            {% for pregunta in preguntas %}
-                <fieldset>
-                    <legend>
-                        Pregunta {{ forloop.counter }}:
-                        {{ pregunta.enunciado }}
-                    </legend>
+        <a href="{% url 'evaluaciones:lista' %}" class="enlace-volver">
+            ← Evaluaciones
+        </a>
+    </header>
 
-                    {% if pregunta.es_provisional %}
-                        <p><em>Pregunta provisional</em></p>
-                    {% endif %}
+    <main class="contenedor contenedor-resolver">
 
-                    {% for opcion in pregunta.opciones.all %}
-                        <label>
-                            <input
-                                type="radio"
-                                name="pregunta_{{ pregunta.id }}"
-                                value="{{ opcion.id }}"
-                            >
-                            {{ opcion.texto }}
-                        </label>
-                        <br>
-                    {% empty %}
-                        <p>Esta pregunta todavía no tiene opciones.</p>
+        <section class="resolver-banner">
+            <div class="resolver-banner-texto">
+                <span class="etiqueta">EVALUACIÓN ACADÉMICA</span>
+
+                <h1>{{ evaluacion.titulo }}</h1>
+
+                <p class="resolver-materia">
+                    <span aria-hidden="true">📘</span>
+                    <strong>Materia:</strong>
+                    {{ evaluacion.materia.nombre }}
+                </p>
+            </div>
+
+            <div class="resolver-banner-icono" aria-hidden="true">
+                📝
+            </div>
+        </section>
+
+        {% if messages %}
+            <div class="mensajes-resolver" aria-live="polite">
+                {% for message in messages %}
+                    <div class="mensaje-resolver mensaje-{{ message.tags|default:'info' }}">
+                        <span aria-hidden="true">ℹ️</span>
+                        <p>{{ message }}</p>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <section class="instrucciones-evaluacion">
+            <span class="instrucciones-icono" aria-hidden="true">💡</span>
+
+            <div>
+                <h2>Antes de comenzar</h2>
+                <p>
+                    Lee cada pregunta con atención y selecciona la opción
+                    que consideres correcta.
+                </p>
+                <p class="nota-provisional">
+                    Algunas preguntas pueden ser provisionales mientras
+                    se preparan las preguntas definitivas del proyecto.
+                </p>
+            </div>
+        </section>
+
+        <section class="seccion-preguntas">
+
+            <div class="encabezado-preguntas">
+                <div>
+                    <h2>Preguntas de la evaluación</h2>
+                    <p>Revisa tus respuestas antes de enviarlas.</p>
+                </div>
+
+                {% if preguntas %}
+                    <span class="contador-preguntas">
+                        {{ preguntas|length }}
+                        {% if preguntas|length == 1 %}
+                            pregunta
+                        {% else %}
+                            preguntas
+                        {% endif %}
+                    </span>
+                {% endif %}
+            </div>
+
+            {% if preguntas %}
+
+                <form method="post"
+                      action="{% url 'evaluaciones:enviar' intento.id %}"
+                      class="formulario-respuestas">
+
+                    {% csrf_token %}
+
+                    {% for pregunta in preguntas %}
+                        <fieldset class="tarjeta-pregunta">
+
+                            <legend class="pregunta-enunciado">
+                                <span class="numero-pregunta">
+                                    {{ forloop.counter|stringformat:"02d" }}
+                                </span>
+
+                                <span class="texto-pregunta">
+                                    {{ pregunta.enunciado }}
+                                </span>
+                            </legend>
+
+                            {% if pregunta.es_provisional %}
+                                <div class="aviso-provisional">
+                                    <span aria-hidden="true">ℹ️</span>
+                                    Pregunta provisional
+                                </div>
+                            {% endif %}
+
+                            <div class="lista-opciones">
+                                {% for opcion in pregunta.opciones.all %}
+                                    <label class="opcion-respuesta">
+                                        <input
+                                            type="radio"
+                                            name="pregunta_{{ pregunta.id }}"
+                                            value="{{ opcion.id }}"
+                                        >
+
+                                        <span class="opcion-texto">
+                                            {{ opcion.texto }}
+                                        </span>
+                                    </label>
+                                {% empty %}
+                                    <div class="sin-opciones">
+                                        <span aria-hidden="true">⚠️</span>
+                                        Esta pregunta todavía no tiene opciones.
+                                    </div>
+                                {% endfor %}
+                            </div>
+
+                        </fieldset>
                     {% endfor %}
-                </fieldset>
-                <br>
-            {% endfor %}
 
-            <button type="submit">Enviar respuestas y calificar</button>
-        </form>
-    {% else %}
-        <p>Esta evaluación no tiene preguntas activas.</p>
-    {% endif %}
+                    <div class="acciones-respuestas">
+                        <p class="nota-envio">
+                            Cuando hayas terminado, envía tus respuestas
+                            para que puedan ser calificadas.
+                        </p>
 
-    <p><a href="{% url 'evaluaciones:lista' %}">Volver a evaluaciones</a></p>
+                        <button type="submit"
+                                class="boton boton-principal boton-enviar-respuestas">
+                            Enviar respuestas y calificar
+                            <span aria-hidden="true">→</span>
+                        </button>
+                    </div>
+
+                </form>
+
+            {% else %}
+
+                <div class="estado-vacio-preguntas">
+                    <div class="vacio-preguntas-icono" aria-hidden="true">
+                        📋
+                    </div>
+
+                    <h3>Esta evaluación no tiene preguntas activas</h3>
+
+                    <p>
+                        Por el momento no hay preguntas disponibles
+                        para responder en esta evaluación.
+                    </p>
+
+                    <a href="{% url 'evaluaciones:lista' %}"
+                       class="boton boton-principal">
+                        Volver a evaluaciones
+                    </a>
+                </div>
+
+            {% endif %}
+
+        </section>
+
+        <div class="acciones-volver-evaluacion">
+            <a href="{% url 'evaluaciones:lista' %}"
+               class="boton boton-secundario">
+                ← Volver a evaluaciones
+            </a>
+        </div>
+
+    </main>
+
+    <footer class="pie-pagina">
+        <div class="pie-contenido">
+            <span>PA · Plataforma de Aprendizaje</span>
+            <p>Proyecto académico · Aprender para avanzar</p>
+        </div>
+    </footer>
+
 </body>
 </html>

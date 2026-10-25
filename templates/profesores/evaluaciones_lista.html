@@ -1,0 +1,71 @@
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Administrar evaluaciones</title>
+    <link rel="stylesheet" href="{% static 'css/panel_profesor.css' %}">
+</head>
+<body>
+    <main class="main-content">
+        <h1>Mis evaluaciones</h1>
+        <p>Consulta y administra las evaluaciones de la plataforma.</p>
+
+        {% if messages %}
+            {% for message in messages %}
+                <p class="mensaje">{{ message }}</p>
+            {% endfor %}
+        {% endif %}
+
+        <p>
+            <a href="{% url 'evaluaciones:profesor_crear' %}">
+                + Crear evaluación
+            </a>
+        </p>
+
+        {% if evaluaciones %}
+            <div class="tabla-contenedor">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Título</th>
+                            <th>Materia</th>
+                            <th>Estado</th>
+                            <th>Fecha de creación</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for evaluacion in evaluaciones %}
+                            <tr>
+                                <td>{{ evaluacion.titulo }}</td>
+                                <td>{{ evaluacion.materia }}</td>
+                                <td>
+                                    {% if evaluacion.activa %}
+                                        Activa
+                                    {% else %}
+                                        Inactiva
+                                    {% endif %}
+                                </td>
+                                <td>{{ evaluacion.fecha_creacion|date:"d/m/Y" }}</td>
+                                <td>
+                                    <a href="{% url 'evaluaciones:profesor_editar' evaluacion.id %}">
+                                        Editar
+                                    </a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <p>Todavía no hay evaluaciones creadas por ti.</p>
+            <p>Selecciona "Crear evaluación" para registrar la primera.</p>
+        {% endif %}
+
+        <p><a href="{% url 'panel_profesor' %}">Volver al panel</a></p>
+    </main>
+</body>
+</html>

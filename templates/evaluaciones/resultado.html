@@ -1,58 +1,225 @@
 
+{% load static %}
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Resultado | Plataforma de aprendizaje</title>
+
+    <title>Resultado | Plataforma de Aprendizaje</title>
+
+    <link rel="stylesheet" href="{% static 'css/estilos.css' %}">
 </head>
-<body>
-    <h1>Resultado de la evaluación</h1>
 
-    <h2>{{ intento.evaluacion.titulo }}</h2>
-    <p><strong>Materia:</strong> {{ intento.evaluacion.materia.nombre }}</p>
+<body class="pagina-resultado">
 
-    {% if intento.finalizado %}
-        <p>
-            <strong>Puntaje obtenido:</strong>
-            {{ intento.puntaje_obtenido }}
-        </p>
+    <header class="encabezado">
+        <a href="{% url 'inicio' %}" class="marca">
+            <span class="marca-icono">PA</span>
+            <span>Plataforma de <strong>Aprendizaje</strong></span>
+        </a>
 
-        <p>
-            <strong>Porcentaje:</strong>
-            {{ intento.porcentaje }}%
-        </p>
-    {% else %}
-        <p>Esta evaluación todavía no ha sido finalizada.</p>
-    {% endif %}
+        <a href="{% url 'evaluaciones:lista' %}" class="enlace-volver">
+            ← Evaluaciones
+        </a>
+    </header>
 
-    <h3>Detalle de las respuestas</h3>
+    <main class="contenedor contenedor-resultado">
 
-    {% for respuesta in respuestas %}
-        <section>
-            <p><strong>{{ respuesta.pregunta.enunciado }}</strong></p>
-
-            {% if respuesta.opcion_seleccionada %}
+        <section class="resultado-banner">
+            <div class="resultado-banner-texto">
+                <span class="etiqueta">RESUMEN DE TU DESEMPEÑO</span>
+                <h1>Resultado de la evaluación</h1>
                 <p>
-                    Tu respuesta:
-                    {{ respuesta.opcion_seleccionada.texto }}
+                    Consulta el resultado de tu intento y revisa tus respuestas.
                 </p>
+            </div>
 
-                {% if respuesta.es_correcta %}
-                    <p>Respuesta correcta.</p>
-                {% else %}
-                    <p>Respuesta incorrecta.</p>
-                {% endif %}
-            {% else %}
-                <p>Pregunta sin responder.</p>
-            {% endif %}
+            <div class="resultado-banner-icono" aria-hidden="true">
+                🏆
+            </div>
         </section>
-        <hr>
-    {% empty %}
-        <p>No hay respuestas registradas para este intento.</p>
-    {% endfor %}
 
-    <p><a href="{% url 'evaluaciones:lista' %}">Volver a evaluaciones</a></p>
-    <p><a href="/">Volver al inicio</a></p>
+        <section class="resumen-evaluacion">
+
+            <div class="resumen-titulo">
+                <div class="resumen-icono" aria-hidden="true">📝</div>
+
+                <div>
+                    <span class="resultado-etiqueta">EVALUACIÓN</span>
+                    <h2>{{ intento.evaluacion.titulo }}</h2>
+                    <p>
+                        <strong>Materia:</strong>
+                        {{ intento.evaluacion.materia.nombre }}
+                    </p>
+                </div>
+            </div>
+
+            {% if intento.finalizado %}
+
+                <div class="resultado-metricas">
+
+                    <article class="metrica-resultado">
+                        <div class="metrica-icono metrica-azul" aria-hidden="true">
+                            🎯
+                        </div>
+                        <span class="metrica-label">Puntaje obtenido</span>
+                        <strong class="metrica-valor">
+                            {{ intento.puntaje_obtenido }}
+                        </strong>
+                    </article>
+
+                    <article class="metrica-resultado">
+                        <div class="metrica-icono metrica-verde" aria-hidden="true">
+                            📊
+                        </div>
+                        <span class="metrica-label">Porcentaje</span>
+                        <strong class="metrica-valor">
+                            {{ intento.porcentaje }}%
+                        </strong>
+                    </article>
+
+                </div>
+
+                <div class="barra-resultado-contenedor">
+                    <div class="barra-resultado-texto">
+                        <span>Porcentaje obtenido</span>
+                        <strong>{{ intento.porcentaje }}%</strong>
+                    </div>
+
+                    <div class="barra-resultado">
+                        <div class="barra-resultado-progreso"
+                             role="progressbar"
+                             aria-label="Porcentaje obtenido"
+                             aria-valuemin="0"
+                             aria-valuemax="100"
+                             aria-valuenow="{{ intento.porcentaje }}"
+                             style="width: {{ intento.porcentaje }}%;">
+                        </div>
+                    </div>
+                </div>
+
+            {% else %}
+
+                <div class="aviso-no-finalizado">
+                    <span class="aviso-no-finalizado-icono" aria-hidden="true">
+                        ⏳
+                    </span>
+
+                    <div>
+                        <h3>Evaluación pendiente de finalizar</h3>
+                        <p>
+                            Esta evaluación todavía no ha sido finalizada.
+                            El resultado definitivo aún no está disponible.
+                        </p>
+                    </div>
+                </div>
+
+            {% endif %}
+
+        </section>
+
+        <section class="seccion-detalle-respuestas">
+
+            <div class="titulo-detalle-respuestas">
+                <div>
+                    <h2>Detalle de las respuestas</h2>
+                    <p>
+                        Revisa las respuestas registradas en tu intento.
+                    </p>
+                </div>
+            </div>
+
+            {% for respuesta in respuestas %}
+
+                <article class="tarjeta-respuesta">
+
+                    <div class="respuesta-encabezado">
+                        <span class="respuesta-numero">
+                            {{ forloop.counter|stringformat:"02d" }}
+                        </span>
+
+                        <h3>{{ respuesta.pregunta.enunciado }}</h3>
+                    </div>
+
+                    {% if respuesta.opcion_seleccionada %}
+
+                        <div class="respuesta-seleccionada">
+                            <span class="respuesta-label">Tu respuesta</span>
+                            <p>{{ respuesta.opcion_seleccionada.texto }}</p>
+                        </div>
+
+                        {% if respuesta.es_correcta %}
+
+                            <div class="estado-respuesta respuesta-correcta">
+                                <span class="estado-respuesta-icono" aria-hidden="true">
+                                    ✓
+                                </span>
+                                <span>Respuesta correcta</span>
+                            </div>
+
+                        {% else %}
+
+                            <div class="estado-respuesta respuesta-incorrecta">
+                                <span class="estado-respuesta-icono" aria-hidden="true">
+                                    !
+                                </span>
+                                <span>Respuesta incorrecta</span>
+                            </div>
+
+                        {% endif %}
+
+                    {% else %}
+
+                        <div class="estado-respuesta respuesta-sin-contestar">
+                            <span class="estado-respuesta-icono" aria-hidden="true">
+                                —
+                            </span>
+                            <span>Pregunta sin responder</span>
+                        </div>
+
+                    {% endif %}
+
+                </article>
+
+            {% empty %}
+
+                <div class="estado-vacio-respuestas">
+                    <div class="vacio-respuestas-icono" aria-hidden="true">
+                        📋
+                    </div>
+
+                    <h3>No hay respuestas registradas</h3>
+
+                    <p>
+                        No se encontraron respuestas para este intento.
+                    </p>
+                </div>
+
+            {% endfor %}
+
+        </section>
+
+        <div class="acciones-resultado">
+            <a href="{% url 'evaluaciones:lista' %}"
+               class="boton boton-principal">
+                Ver evaluaciones
+            </a>
+
+            <a href="{% url 'inicio' %}"
+               class="boton boton-secundario">
+                ← Volver al inicio
+            </a>
+        </div>
+
+    </main>
+
+    <footer class="pie-pagina">
+        <div class="pie-contenido">
+            <span>PA · Plataforma de Aprendizaje</span>
+            <p>Proyecto académico · Aprender para avanzar</p>
+        </div>
+    </footer>
+
 </body>
 </html>

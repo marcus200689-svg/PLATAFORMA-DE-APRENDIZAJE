@@ -1,0 +1,176 @@
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mis resultados | Plataforma de Aprendizaje</title>
+    <link rel="stylesheet" href="{% static 'css/estilos.css' %}">
+</head>
+
+<body class="pagina-lista-resultados">
+
+    <header class="encabezado">
+        <a href="{% url 'inicio' %}" class="marca">
+            <span class="marca-icono">PA</span>
+            <span>Plataforma de Aprendizaje</span>
+        </a>
+
+        <nav class="nav-lista-resultados">
+            <a href="{% url 'evaluaciones:lista' %}">Evaluaciones</a>
+            <a href="{% url 'recomendaciones:lista' %}">Recomendaciones</a>
+        </nav>
+    </header>
+
+    <main class="contenedor-lista-resultados">
+
+        <section class="banner-lista-resultados">
+            <span class="etiqueta-lista-resultados">Tu progreso académico</span>
+
+            <h1>Mis resultados</h1>
+
+            <p>
+                Consulta las evaluaciones que has finalizado, revisa tus
+                calificaciones y conoce tu progreso de aprendizaje.
+            </p>
+
+            {% if intentos %}
+                <div class="contador-intentos">
+                    <span class="contador-intentos-numero">
+                        {{ intentos|length }}
+                    </span>
+                    <span>
+                        evaluación{{ intentos|length|pluralize:"es" }}
+                        finalizada{{ intentos|length|pluralize:"s" }}
+                    </span>
+                </div>
+            {% endif %}
+        </section>
+
+        {% if intentos %}
+
+            <section class="seccion-lista-resultados">
+                <div class="titulo-lista-resultados">
+                    <div>
+                        <h2>Historial de evaluaciones</h2>
+                        <p>Selecciona una evaluación para consultar su detalle.</p>
+                    </div>
+                </div>
+
+                <div class="rejilla-lista-resultados">
+
+                    {% for intento in intentos %}
+                        <article class="tarjeta-lista-resultado">
+
+                            <div class="cabecera-tarjeta-resultado">
+                                <span class="icono-tarjeta-resultado"
+                                      aria-hidden="true">📊</span>
+
+                                <span class="estado-evaluacion-finalizada">
+                                    Finalizada
+                                </span>
+                            </div>
+
+                            <h2>{{ intento.evaluacion.titulo }}</h2>
+
+                            <div class="materia-lista-resultado">
+                                <span class="icono-detalle-resultado"
+                                      aria-hidden="true">📘</span>
+                                <div>
+                                    <span class="etiqueta-detalle-resultado">
+                                        Materia
+                                    </span>
+                                    <strong>
+                                        {{ intento.evaluacion.materia.nombre }}
+                                    </strong>
+                                </div>
+                            </div>
+
+                            <div class="calificacion-lista-resultado">
+                                <div class="fila-calificacion-lista">
+                                    <span>Porcentaje general</span>
+                                    <strong>{{ intento.porcentaje }}%</strong>
+                                </div>
+
+                                <div class="barra-lista-resultado">
+                                    <div
+                                        class="progreso-lista-resultado"
+                                        style="width: {% if intento.porcentaje > 100 %}100{% elif intento.porcentaje < 0 %}0{% else %}{{ intento.porcentaje }}{% endif %}%;">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="fecha-lista-resultado">
+                                <span class="icono-detalle-resultado"
+                                      aria-hidden="true">🗓️</span>
+                                <div>
+                                    <span class="etiqueta-detalle-resultado">
+                                        Fecha de finalización
+                                    </span>
+                                    <strong>
+                                        {{ intento.fecha_finalizacion|date:"d/m/Y H:i" }}
+                                    </strong>
+                                </div>
+                            </div>
+
+                            <a
+                                href="{% url 'resultados:detalle' intento.id %}"
+                                class="boton-detalle-resultado">
+                                Consultar detalle
+                                <span aria-hidden="true">→</span>
+                            </a>
+
+                        </article>
+                    {% endfor %}
+
+                </div>
+            </section>
+
+        {% else %}
+
+            <section class="estado-vacio-lista-resultados">
+                <div class="icono-vacio-resultados" aria-hidden="true">
+                    📋
+                </div>
+
+                <h2>Aún no tienes resultados</h2>
+
+                <p>
+                    Cuando finalices una evaluación, podrás consultar aquí
+                    tu calificación, la fecha de finalización y el detalle
+                    de tu desempeño.
+                </p>
+
+                <a
+                    href="{% url 'evaluaciones:lista' %}"
+                    class="boton-lista-resultados">
+                    Ver evaluaciones disponibles
+                </a>
+            </section>
+
+        {% endif %}
+
+        <section class="acciones-lista-resultados">
+            <a href="{% url 'evaluaciones:lista' %}"
+               class="boton-secundario">
+                Ver evaluaciones
+            </a>
+
+            <a href="{% url 'inicio' %}"
+               class="enlace-inicio-lista-resultados">
+                ← Volver al inicio
+            </a>
+        </section>
+
+    </main>
+
+    <footer class="pie-pagina">
+        <div class="pie-contenido">
+            <span>PA · Plataforma de Aprendizaje</span>
+            <span>Aprende, evalúa y mejora.</span>
+        </div>
+    </footer>
+
+</body>
+</html>

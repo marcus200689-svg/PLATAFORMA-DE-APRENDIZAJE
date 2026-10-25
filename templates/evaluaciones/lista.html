@@ -1,40 +1,171 @@
 
+{% load static %}
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Evaluaciones | Plataforma de aprendizaje</title>
+
+    <title>Evaluaciones | Plataforma de Aprendizaje</title>
+
+    <link rel="stylesheet" href="{% static 'css/estilos.css' %}">
 </head>
-<body>
-    <h1>Evaluaciones disponibles</h1>
-    <p>Selecciona una evaluación para comenzar.</p>
 
-    {% if messages %}
-        {% for message in messages %}
-            <p>{{ message }}</p>
-        {% endfor %}
-    {% endif %}
+<body class="pagina-evaluaciones">
 
-    {% if evaluaciones %}
-        {% for evaluacion in evaluaciones %}
-            <section>
-                <h2>{{ evaluacion.titulo }}</h2>
-                <p><strong>Materia:</strong> {{ evaluacion.materia.nombre }}</p>
-                <p>{{ evaluacion.descripcion|default:"Sin descripción." }}</p>
+    <header class="encabezado">
+        <a href="{% url 'inicio' %}" class="marca">
+            <span class="marca-icono">PA</span>
+            <span>Plataforma de <strong>Aprendizaje</strong></span>
+        </a>
 
-                <form method="post"
-                      action="{% url 'evaluaciones:iniciar' evaluacion.id %}">
-                    {% csrf_token %}
-                    <button type="submit">Comenzar evaluación</button>
-                </form>
-            </section>
-            <hr>
-        {% endfor %}
-    {% else %}
-        <p>Por el momento no hay evaluaciones disponibles.</p>
-    {% endif %}
+        <nav class="navegacion-evaluaciones">
+            <a href="{% url 'inicio' %}" class="enlace-volver">
+                ← Inicio
+            </a>
+            <a href="{% url 'lista_materias' %}" class="enlace-volver">
+                Materias
+            </a>
+        </nav>
+    </header>
 
-    <p><a href="/">Volver al inicio</a></p>
+    <main class="contenedor contenedor-evaluaciones">
+
+        <section class="evaluaciones-banner">
+            <div class="evaluaciones-banner-texto">
+                <span class="etiqueta">PON A PRUEBA LO QUE SABES</span>
+
+                <h1>Evaluaciones</h1>
+
+                <p>
+                    Comprueba tus conocimientos, demuestra lo que has aprendido
+                    y continúa avanzando en tu formación académica.
+                </p>
+            </div>
+
+            <div class="evaluaciones-banner-icono" aria-hidden="true">
+                📝
+            </div>
+        </section>
+
+        {% if messages %}
+            <div class="mensajes-evaluaciones" aria-live="polite">
+                {% for message in messages %}
+                    <div class="mensaje-evaluacion mensaje-{{ message.tags|default:'info' }}">
+                        <span aria-hidden="true">ℹ️</span>
+                        <p>{{ message }}</p>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <section class="seccion-evaluaciones">
+
+            <div class="titulo-seccion">
+                <div>
+                    <h2>Evaluaciones disponibles</h2>
+                    <p>
+                        Selecciona una evaluación para comenzar.
+                    </p>
+                </div>
+
+                {% if evaluaciones %}
+                    <span class="contador-evaluaciones">
+                        {{ evaluaciones|length }}
+                        {% if evaluaciones|length == 1 %}
+                            evaluación
+                        {% else %}
+                            evaluaciones
+                        {% endif %}
+                    </span>
+                {% endif %}
+            </div>
+
+            {% if evaluaciones %}
+
+                <div class="rejilla-evaluaciones">
+                    {% for evaluacion in evaluaciones %}
+                        <article class="tarjeta-evaluacion">
+
+                            <div class="evaluacion-icono" aria-hidden="true">
+                                <span>{{ forloop.counter|stringformat:"02d" }}</span>
+                            </div>
+
+                            <div class="evaluacion-contenido">
+
+                                <span class="evaluacion-etiqueta">
+                                    EVALUACIÓN ACADÉMICA
+                                </span>
+
+                                <h3>{{ evaluacion.titulo }}</h3>
+
+                                <div class="evaluacion-materia">
+                                    <span aria-hidden="true">📘</span>
+                                    <span>
+                                        <strong>Materia:</strong>
+                                        {{ evaluacion.materia.nombre }}
+                                    </span>
+                                </div>
+
+                                <p class="evaluacion-descripcion">
+                                    {{ evaluacion.descripcion|default:"Sin descripción." }}
+                                </p>
+
+                                <form method="post"
+                                      action="{% url 'evaluaciones:iniciar' evaluacion.id %}"
+                                      class="formulario-iniciar">
+                                    {% csrf_token %}
+
+                                    <button type="submit"
+                                            class="boton boton-principal boton-iniciar">
+                                        Comenzar evaluación
+                                        <span aria-hidden="true">→</span>
+                                    </button>
+                                </form>
+
+                            </div>
+                        </article>
+                    {% endfor %}
+                </div>
+
+            {% else %}
+
+                <div class="estado-vacio-evaluaciones">
+                    <div class="vacio-evaluaciones-icono" aria-hidden="true">
+                        📋
+                    </div>
+
+                    <h3>No hay evaluaciones disponibles</h3>
+
+                    <p>
+                        Por el momento no hay evaluaciones para realizar.
+                        Vuelve más tarde para consultar las nuevas actividades.
+                    </p>
+
+                    <a href="{% url 'inicio' %}"
+                       class="boton boton-secundario">
+                        ← Volver al inicio
+                    </a>
+                </div>
+
+            {% endif %}
+
+        </section>
+
+        <div class="acciones-evaluaciones">
+            <a href="{% url 'inicio' %}" class="boton boton-secundario">
+                ← Regresar al inicio
+            </a>
+        </div>
+
+    </main>
+
+    <footer class="pie-pagina">
+        <div class="pie-contenido">
+            <span>PA · Plataforma de Aprendizaje</span>
+            <p>Proyecto académico · Aprender para avanzar</p>
+        </div>
+    </footer>
+
 </body>
 </html>

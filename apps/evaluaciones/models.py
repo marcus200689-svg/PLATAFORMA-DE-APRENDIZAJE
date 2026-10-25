@@ -12,6 +12,15 @@ class Evaluacion(models.Model):
         on_delete=models.PROTECT,
         related_name="evaluaciones",
     )
+    
+    creada_por = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="evaluaciones_creadas",
+        verbose_name="Profesor creador",
+    )
 
     activa = models.BooleanField(default=True)
     fecha_creacion = models.DateTimeField(auto_now_add=True)
@@ -23,7 +32,7 @@ class Evaluacion(models.Model):
 
     def __str__(self):
         return f"{self.titulo} - {self.materia.nombre}"
-
+    
 
 class Pregunta(models.Model):
     evaluacion = models.ForeignKey(

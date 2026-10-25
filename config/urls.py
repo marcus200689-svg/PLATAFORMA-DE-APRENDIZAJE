@@ -25,4 +25,13 @@ urlpatterns = [
 
     # Módulo académico
     path("academico/", include("apps.academico.urls")),
+    path("resultados/", include("apps.resultados.urls")),
+    path(
+    "recomendaciones/",
+    include("apps.recomendaciones.urls"),),
+    
+    path(
+    "profesor/",
+    usuarios_views.panel_profesor,
+    name="panel_profesor",),
 ]
