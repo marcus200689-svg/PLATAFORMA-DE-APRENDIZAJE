@@ -1,0 +1,102 @@
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ titulo_pagina }} | EduPlatform</title>
+    <link rel="stylesheet" href="{% static 'css/panel_profesor.css' %}?v=7">
+</head>
+<body>
+
+<div class="ep-dashboard">
+
+    {% include "profesores/partials/menu_lateral.html" %}
+
+    <main class="ep-main">
+
+        <header class="ep-header">
+            <div class="ep-breadcrumb">
+                Plataforma / Profesor / Gestión académica / {{ titulo_pagina }}
+            </div>
+
+            <div class="ep-header-profile">
+                <div class="ep-avatar">
+                    {{ request.user.username|first|upper }}
+                </div>
+                <span>{{ request.user.username }}</span>
+            </div>
+        </header>
+
+        <section class="ep-welcome">
+            <div>
+                <span class="ep-section-label">GESTIÓN ACADÉMICA</span>
+                <h1>{{ titulo_pagina }}</h1>
+                <p>{{ descripcion_pagina }}</p>
+            </div>
+        </section>
+
+        <section class="q-card">
+
+            <div class="q-card-heading">
+                <div class="q-heading-icon">01</div>
+                <div>
+                    <h2>Información del registro</h2>
+                    <p>Completa los campos para guardar la información.</p>
+                </div>
+            </div>
+
+            <form method="POST" class="ep-academic-form">
+                {% csrf_token %}
+
+                {% if formulario.non_field_errors %}
+                    <div class="ep-form-errors">
+                        {{ formulario.non_field_errors }}
+                    </div>
+                {% endif %}
+
+                {% for campo in formulario %}
+                    <div class="ep-form-group">
+
+                        <label for="{{ campo.id_for_label }}">
+                            {{ campo.label }}
+                        </label>
+
+                        {{ campo }}
+
+                        {% if campo.help_text %}
+                            <small>{{ campo.help_text }}</small>
+                        {% endif %}
+
+                        {% for error in campo.errors %}
+                            <p class="ep-field-error">{{ error }}</p>
+                        {% endfor %}
+
+                    </div>
+                {% endfor %}
+
+                <div class="ep-form-actions">
+                    <button type="submit" class="ep-primary-button">
+                        Guardar información
+                    </button>
+
+                    <a href="{% url url_regreso %}" class="ep-secondary-button">
+                        Cancelar
+                    </a>
+                </div>
+
+            </form>
+
+        </section>
+
+        <footer class="ep-footer">
+            <span>© 2026 EduPlatform</span>
+            <span>Plataforma de Aprendizaje</span>
+        </footer>
+
+    </main>
+</div>
+
+</body>
+</html>

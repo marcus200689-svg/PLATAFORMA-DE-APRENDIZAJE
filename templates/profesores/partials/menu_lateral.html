@@ -1,0 +1,107 @@
+
+{% load static %}
+
+<aside class="ep-sidebar">
+
+    <div class="ep-brand">
+        <div class="ep-brand-icon">E</div>
+        <div>
+            <h2>EduPlatform</h2>
+            <span>Plataforma educativa</span>
+        </div>
+    </div>
+
+    <div class="ep-menu-title">MENÚ PRINCIPAL</div>
+
+    <nav class="ep-navigation">
+
+        <a href="{% url 'evaluaciones:profesor_lista' %}"
+           class="ep-nav-link {% if seccion_activa == 'inicio' %}ep-selected{% endif %}">
+            <span class="ep-nav-icon">⌂</span>
+            <span>Inicio</span>
+        </a>
+
+        <a href="{% url 'evaluaciones:profesor_crear' %}"
+           class="ep-nav-link {% if seccion_activa == 'crear' %}ep-selected{% endif %}">
+            <span class="ep-nav-icon">＋</span>
+            <span>Crear evaluación</span>
+        </a>
+
+        <a href="{% url 'evaluaciones:profesor_lista' %}"
+           class="ep-nav-link {% if seccion_activa == 'evaluaciones' %}ep-selected{% endif %}">
+            <span class="ep-nav-icon">▤</span>
+            <span>Mis evaluaciones</span>
+        </a>
+
+        <div class="ep-menu-title">GESTIÓN ACADÉMICA</div>
+
+        <a href="{% url 'profesor_materias' %}"
+           class="ep-nav-link {% if seccion_activa == 'materias' %}ep-selected{% endif %}">
+            <span class="ep-nav-icon">▣</span>
+            <span>Materias</span>
+        </a>
+
+        <a href="{% url 'profesor_temas' %}"
+           class="ep-nav-link {% if seccion_activa == 'temas' %}ep-selected{% endif %}">
+            <span class="ep-nav-icon">▤</span>
+            <span>Temas</span>
+        </a>
+
+        <a href="{% url 'profesor_habilidades' %}"
+           class="ep-nav-link {% if seccion_activa == 'habilidades' %}ep-selected{% endif %}">
+            <span class="ep-nav-icon">◇</span>
+            <span>Habilidades</span>
+        </a>
+
+        <div class="ep-menu-title">RECOMENDACIONES</div>
+
+        <a href="{% url 'recomendaciones:profesor_lista' %}"
+           class="ep-nav-link {% if seccion_activa == 'recomendaciones' %}ep-selected{% endif %}">
+            <span class="ep-nav-icon">✦</span>
+            <span>Consultar recomendaciones</span>
+        </a>
+
+        <div class="ep-menu-title">RESULTADOS ACADÉMICOS</div>
+
+        <a href="{% url 'resultados:profesor_materias' %}"
+           class="ep-nav-link {% if seccion_activa == 'resultado_materia' %}ep-selected{% endif %}">
+            <span class="ep-nav-icon">▥</span>
+            <span>Por materia</span>
+        </a>
+
+        <a href="{% url 'resultados:profesor_temas' %}"
+           class="ep-nav-link {% if seccion_activa == 'resultado_tema' %}ep-selected{% endif %}">
+            <span class="ep-nav-icon">▤</span>
+            <span>Por tema</span>
+        </a>
+
+        <a href="{% url 'resultados:profesor_habilidades' %}"
+           class="ep-nav-link {% if seccion_activa == 'resultado_habilidad' %}ep-selected{% endif %}">
+            <span class="ep-nav-icon">◇</span>
+            <span>Por habilidad</span>
+        </a>
+
+    </nav>
+
+    <div class="ep-sidebar-bottom">
+        <div class="ep-help-icon">?</div>
+        <div>
+            <strong>Panel del profesor</strong>
+            <span>Administración docente</span>
+        </div>
+    </div>
+
+    <form method="POST"
+          action="{% url 'usuarios:cerrar_sesion' %}"
+          class="ep-logout-form">
+
+        {% csrf_token %}
+
+        <button type="submit" class="ep-logout-button">
+            <span>↗</span>
+            <span>Cerrar sesión</span>
+        </button>
+
+    </form>
+
+</aside>

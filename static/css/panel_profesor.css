@@ -1383,3 +1383,484 @@ body {
     border-color: #f2cccc;
     color: #c24141;
 }
+/* LISTAS DE GESTIÓN ACADÉMICA */
+
+.ep-academic-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 22px;
+}
+
+.ep-academic-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 18px;
+    background: #f8faff;
+    border: 1px solid #e0e6ef;
+    border-radius: 12px;
+}
+
+.ep-academic-item h3 {
+    margin: 0 0 7px;
+    color: #243047;
+    font-size: 16px;
+}
+
+.ep-academic-item p {
+    margin: 4px 0 0;
+    color: #667085;
+    font-size: 14px;
+}
+
+.ep-academic-status {
+    padding: 6px 12px;
+    border-radius: 20px;
+    background: #e8f5ed;
+    color: #18794e;
+    font-size: 12px;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+@media (max-width: 600px) {
+    .ep-academic-item {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+}
+
+/* TARJETAS DE RECOMENDACIONES */
+
+.ep-recommendation-card,
+.ep-result-card {
+    padding: 20px;
+    background: #ffffff;
+    border: 1px solid #e0e6ef;
+    border-radius: 12px;
+}
+
+.ep-recommendation-card {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.ep-recommendation-header,
+.ep-result-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 15px;
+}
+
+.ep-recommendation-header h3,
+.ep-result-heading h3 {
+    margin: 0 0 7px;
+    color: #243047;
+    font-size: 17px;
+}
+
+.ep-recommendation-type {
+    color: #667085;
+    font-size: 13px;
+}
+
+.ep-recommendation-description {
+    margin: 0;
+    color: #475467;
+    line-height: 1.6;
+}
+
+.ep-recommendation-details,
+.ep-result-details {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px 22px;
+    padding-top: 14px;
+    border-top: 1px solid #e0e6ef;
+}
+
+.ep-recommendation-details span,
+.ep-result-details span {
+    color: #667085;
+    font-size: 13px;
+}
+
+.ep-recommendation-details strong,
+.ep-result-details strong {
+    color: #344054;
+}
+
+.ep-priority {
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.ep-priority-baja {
+    background: #e8f5ed;
+    color: #18794e;
+}
+
+.ep-priority-media {
+    background: #fff4d6;
+    color: #946200;
+}
+
+.ep-priority-alta {
+    background: #fde8e7;
+    color: #b42318;
+}
+
+/* TARJETAS DE RESULTADOS */
+
+.ep-results-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-top: 22px;
+}
+
+.ep-result-card {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.ep-result-heading p {
+    margin: 0;
+    color: #667085;
+    font-size: 13px;
+}
+
+.ep-result-percentage {
+    color: #3157a4;
+    font-size: 24px;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.ep-result-progress {
+    width: 100%;
+    height: 10px;
+    overflow: hidden;
+    background: #e9edf5;
+    border-radius: 20px;
+}
+
+.ep-result-progress-fill {
+    height: 100%;
+    background: #3157a4;
+    border-radius: 20px;
+}
+
+@media (max-width: 600px) {
+    .ep-recommendation-header,
+    .ep-result-heading {
+        flex-direction: column;
+    }
+
+    .ep-recommendation-details,
+    .ep-result-details {
+        flex-direction: column;
+    }
+}
+
+/* MENÚ LATERAL AMPLIADO */
+
+.ep-sidebar {
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.ep-navigation {
+    padding-bottom: 20px;
+}
+
+.ep-menu-title {
+    margin-top: 18px;
+}
+
+.ep-nav-link {
+    flex-shrink: 0;
+}
+
+.ep-sidebar-bottom {
+    flex-shrink: 0;
+}
+
+.ep-logout-form {
+    flex-shrink: 0;
+}
+
+
+/* RESULTADOS ACADEMICOS */
+
+.ep-result-card {
+    padding: 22px;
+    background: #ffffff;
+    border: 1px solid #e0e6ef;
+    border-radius: 12px;
+    margin-bottom: 16px;
+}
+
+.ep-result-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 15px;
+}
+
+.ep-result-header h3 {
+    margin: 0 0 7px;
+    color: #243047;
+    font-size: 17px;
+}
+
+.ep-result-percentage {
+    color: #3157a4;
+    font-size: 22px;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.ep-result-description {
+    color: #667085;
+    font-size: 14px;
+    margin: 8px 0;
+}
+
+.ep-result-progress {
+    width: 100%;
+    height: 10px;
+    background: #e8edf5;
+    border-radius: 20px;
+    overflow: hidden;
+    margin: 16px 0;
+}
+
+.ep-result-progress-fill {
+    height: 100%;
+    background: #3157a4;
+    border-radius: 20px;
+    max-width: 100%;
+}
+
+.ep-result-details {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px 24px;
+    padding-top: 12px;
+    border-top: 1px solid #e0e6ef;
+}
+
+.ep-result-details span {
+    color: #667085;
+    font-size: 13px;
+}
+
+.ep-result-details strong {
+    color: #243047;
+}
+
+@media (max-width: 600px) {
+    .ep-result-header {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .ep-result-details {
+        flex-direction: column;
+        gap: 10px;
+    }
+}
+
+/* FORMULARIOS DE GESTION ACADEMICA */
+
+.ep-academic-form {
+    margin-top: 24px;
+}
+
+.ep-form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 20px;
+}
+
+.ep-form-group label {
+    color: #243047;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.ep-form-group input,
+.ep-form-group textarea,
+.ep-form-group select {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 12px 14px;
+    border: 1px solid #e0e6ef;
+    border-radius: 10px;
+    background: #ffffff;
+    color: #243047;
+    font-family: inherit;
+    font-size: 14px;
+    outline: none;
+}
+
+.ep-form-group input:focus,
+.ep-form-group textarea:focus,
+.ep-form-group select:focus {
+    border-color: #3157a4;
+    box-shadow: 0 0 0 3px rgba(49, 87, 164, 0.10);
+}
+
+.ep-form-group textarea {
+    resize: vertical;
+}
+
+.ep-form-group small {
+    color: #667085;
+    font-size: 12px;
+}
+
+.ep-field-error,
+.ep-form-errors {
+    color: #b42318;
+    font-size: 13px;
+}
+
+.ep-form-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 28px;
+}
+
+.ep-primary-button,
+.ep-secondary-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 12px 20px;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.ep-primary-button {
+    border: none;
+    background: #3157a4;
+    color: #ffffff;
+}
+
+.ep-primary-button:hover {
+    background: #244381;
+}
+
+.ep-secondary-button {
+    border: 1px solid #e0e6ef;
+    background: #ffffff;
+    color: #243047;
+}
+
+.ep-secondary-button:hover {
+    background: #f4f7fc;
+}
+
+/* ADMINISTRACION DE REGISTROS ACADEMICOS */
+
+.ep-academic-actions {
+    display: flex;
+    justify-content: flex-end;
+    margin: 22px 0;
+}
+
+.ep-academic-information {
+    flex: 1;
+    min-width: 0;
+}
+
+.ep-academic-information p {
+    margin: 7px 0;
+    color: #667085;
+    font-size: 14px;
+}
+
+.ep-item-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+}
+
+.ep-item-actions form {
+    margin: 0;
+}
+
+.ep-edit-button,
+.ep-toggle-button {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    padding: 9px 13px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.ep-edit-button {
+    background: #eaf0fc;
+    color: #3157a4;
+    border: 1px solid #d7e2f7;
+}
+
+.ep-toggle-button {
+    background: #fff5e8;
+    color: #946200;
+    border: 1px solid #f0dfc4;
+}
+
+.ep-status-inactive {
+    background: #f2f4f7;
+    color: #667085;
+}
+
+.ep-message {
+    padding: 12px 16px;
+    margin: 15px 0;
+    border-radius: 9px;
+    font-size: 14px;
+}
+
+.ep-message-success {
+    background: #e8f5ed;
+    color: #18794e;
+}
+
+.ep-message-error {
+    background: #fef0ef;
+    color: #b42318;
+}
+
+@media (max-width: 700px) {
+    .ep-academic-item {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .ep-item-actions {
+        width: 100%;
+    }
+}

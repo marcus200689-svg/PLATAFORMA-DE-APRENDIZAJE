@@ -13,61 +13,8 @@
 
 <div class="ep-dashboard">
 
-    <!-- MENU LATERAL -->
-    <aside class="ep-sidebar">
-
-        <div class="ep-brand">
-            <div class="ep-brand-icon">E</div>
-            <div>
-                <h2>EduPlatform</h2>
-                <span>Plataforma educativa</span>
-            </div>
-        </div>
-
-        <div class="ep-menu-title">MENÚ PRINCIPAL</div>
-
-        <nav class="ep-navigation">
-
-            <a href="{% url 'evaluaciones:profesor_lista' %}" class="ep-nav-link">
-                <span class="ep-nav-icon">⌂</span>
-                <span>Inicio</span>
-            </a>
-
-            <a href="{% url 'evaluaciones:profesor_crear' %}" class="ep-nav-link">
-                <span class="ep-nav-icon">＋</span>
-                <span>Crear evaluación</span>
-            </a>
-
-            <a href="{% url 'evaluaciones:profesor_lista' %}" class="ep-nav-link ep-selected">
-                <span class="ep-nav-icon">▤</span>
-                <span>Mis evaluaciones</span>
-            </a>
-
-        </nav>
-
-        <div class="ep-sidebar-bottom">
-            <div class="ep-help-icon">?</div>
-            <div>
-                <strong>Panel del profesor</strong>
-                <span>Administración docente</span>
-            </div>
-        </div>
-
-        <form method="POST"
-      action="{% url 'usuarios:cerrar_sesion' %}"
-      class="ep-logout-form">
-
-    {% csrf_token %}
-
-    <button type="submit" class="ep-logout-button">
-        <span>↗</span>
-        <span>Cerrar sesión</span>
-    </button>
-
-</form>
-
-    </aside>
-
+    <!-- MENU LATERAL COMPARTIDO -->
+    {% include "profesores/partials/menu_lateral.html" %}
 
     <!-- CONTENIDO PRINCIPAL -->
     <main class="ep-main">
@@ -85,7 +32,6 @@
             </div>
         </header>
 
-
         <!-- ENCABEZADO -->
         <section class="ep-welcome">
 
@@ -102,7 +48,6 @@
 
         </section>
 
-
         <!-- INFORMACIÓN DE LA EVALUACIÓN -->
         <div class="q-evaluation-info">
             <div class="q-info-icon">▤</div>
@@ -113,7 +58,6 @@
             </div>
         </div>
 
-
         <!-- MENSAJES -->
         {% if messages %}
             {% for message in messages %}
@@ -122,7 +66,6 @@
                 </div>
             {% endfor %}
         {% endif %}
-
 
         <!-- FORMULARIO -->
         <form method="post" class="q-form">
@@ -168,7 +111,6 @@
                 </div>
 
             </section>
-
 
             <!-- OPCIONES DE RESPUESTA -->
             <section class="q-card">
@@ -271,7 +213,6 @@
 
             </section>
 
-
             <!-- BOTONES -->
             <div class="q-form-actions">
 
@@ -287,7 +228,6 @@
             </div>
 
         </form>
-
 
         <footer class="ep-footer">
             <span>© 2026 EduPlatform</span>

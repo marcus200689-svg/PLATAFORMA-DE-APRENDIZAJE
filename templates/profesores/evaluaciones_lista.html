@@ -15,64 +15,8 @@
 
 <div class="ep-dashboard">
 
-    <!-- MENU LATERAL -->
-    <aside class="ep-sidebar">
-
-        <div class="ep-brand">
-            <div class="ep-brand-icon">E</div>
-
-            <div>
-                <h2>EduPlatform</h2>
-                <span>Plataforma educativa</span>
-            </div>
-        </div>
-
-        <div class="ep-menu-title">MENÚ PRINCIPAL</div>
-
-        <nav class="ep-navigation">
-
-          
-            <a href="{% url 'evaluaciones:profesor_lista' %}" class="ep-nav-link">
-                <span class="ep-nav-icon">⌂</span>
-                <span>Inicio</span>
-            </a>
-
-            <a href="{% url 'evaluaciones:profesor_crear' %}" class="ep-nav-link">
-                <span class="ep-nav-icon">＋</span>
-                <span>Crear evaluación</span>
-            </a>
-
-            <a href="{% url 'evaluaciones:profesor_lista' %}" class="ep-nav-link ep-selected">
-                <span class="ep-nav-icon">▤</span>
-                <span>Mis evaluaciones</span>
-            </a>
-
-        </nav>
-
-        <div class="ep-sidebar-bottom">
-            <div class="ep-help-icon">?</div>
-
-            <div>
-                <strong>Panel del profesor</strong>
-                <span>Administración docente</span>
-            </div>
-        </div>
-
-        <form method="POST"
-      action="{% url 'usuarios:cerrar_sesion' %}"
-      class="ep-logout-form">
-
-    {% csrf_token %}
-
-    <button type="submit" class="ep-logout-button">
-        <span>↗</span>
-        <span>Cerrar sesión</span>
-    </button>
-
-</form>
-
-    </aside>
-
+    <!-- MENU LATERAL COMPARTIDO -->
+    {% include "profesores/partials/menu_lateral.html" %}
 
     <!-- CONTENIDO PRINCIPAL -->
     <main class="ep-main">
@@ -94,7 +38,6 @@
 
         </header>
 
-
         <!-- TITULO -->
         <section class="ep-welcome">
 
@@ -115,7 +58,6 @@
 
         </section>
 
-
         <!-- MENSAJES -->
         {% if messages %}
             {% for message in messages %}
@@ -124,7 +66,6 @@
                 </div>
             {% endfor %}
         {% endif %}
-
 
         <!-- LISTADO DE EVALUACIONES -->
         <section class="ep-content-card">
@@ -142,7 +83,6 @@
                 <div class="ep-card-icon">▤</div>
 
             </div>
-
 
             {% if evaluaciones %}
 
@@ -259,7 +199,6 @@
             {% endif %}
 
         </section>
-
 
         <!-- PIE DE PAGINA -->
         <footer class="ep-footer">

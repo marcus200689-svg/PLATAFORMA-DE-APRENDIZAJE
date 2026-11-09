@@ -1,0 +1,202 @@
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ titulo_pagina }} | EduPlatform</title>
+    <link rel="stylesheet" href="{% static 'css/panel_profesor.css' %}?v=7">
+</head>
+<body>
+
+<div class="ep-dashboard">
+
+    {% include "profesores/partials/menu_lateral.html" %}
+
+    <main class="ep-main">
+
+        <header class="ep-header">
+            <div class="ep-breadcrumb">
+                Plataforma / Profesor / Gestión académica / {{ titulo_pagina }}
+            </div>
+
+            <div class="ep-header-profile">
+                <div class="ep-avatar">
+                    {{ request.user.username|first|upper }}
+                </div>
+                <span>{{ request.user.username }}</span>
+            </div>
+        </header>
+
+        <section class="ep-welcome">
+            <div>
+                <span class="ep-section-label">GESTIÓN ACADÉMICA</span>
+                <h1>{{ titulo_pagina }}</h1>
+                <p>{{ descripcion_pagina }}</p>
+            </div>
+        </section>
+
+        <section class="q-card">
+
+            <div class="q-card-heading">
+                <div class="q-heading-icon">01</div>
+                <div>
+                    <h2>Administrar {{ titulo_pagina|lower }}</h2>
+                    <p>Consulta, registra y administra la información académica.</p>
+                </div>
+            </div>
+
+            <!-- MENSAJES -->
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="ep-message ep-message-{{ message.tags }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+
+            <!-- BOTÓN CREAR -->
+            <div class="ep-academic-actions">
+
+                {% if tipo_lista == "materias" %}
+                    <a href="{% url 'profesor_crear_materia' %}"
+                       class="ep-primary-button">
+                        + Agregar materia
+                    </a>
+
+                {% elif tipo_lista == "temas" %}
+                    <a href="{% url 'profesor_crear_tema' %}"
+                       class="ep-primary-button">
+                        + Agregar tema
+                    </a>
+
+                {% elif tipo_lista == "habilidades" %}
+                    <a href="{% url 'profesor_crear_habilidad' %}"
+                       class="ep-primary-button">
+                        + Agregar habilidad
+                    </a>
+                {% endif %}
+
+            </div>
+
+            {% if elementos %}
+
+                <div class="ep-academic-list">
+
+                    {% for elemento in elementos %}
+
+                        <article class="ep-academic-item">
+
+                            <div class="ep-academic-information">
+
+                                <h3>{{ elemento.nombre }}</h3>
+
+                                {% if tipo_lista == "temas" %}
+                                    <p>
+                                        <strong>Materia:</strong>
+                                        {{ elemento.materia.nombre }}
+                                    </p>
+                                {% endif %}
+
+                                {% if elemento.descripcion %}
+                                    <p>{{ elemento.descripcion }}</p>
+                                {% endif %}
+
+                                {% if tipo_lista == "materias" or tipo_lista == "habilidades" %}
+                                    {% if elemento.activa %}
+                                        <span class="ep-academic-status">Activo</span>
+                                    {% else %}
+                                        <span class="ep-academic-status ep-status-inactive">Inactivo</span>
+                                    {% endif %}
+                                {% elif tipo_lista == "temas" %}
+                                    {% if elemento.activo %}
+                                        <span class="ep-academic-status">Activo</span>
+                                    {% else %}
+                                        <span class="ep-academic-status ep-status-inactive">Inactivo</span>
+                                    {% endif %}
+                                {% endif %}
+
+                            </div>
+
+                            <div class="ep-item-actions">
+
+                                <!-- EDITAR -->
+                                {% if tipo_lista == "materias" %}
+                                    <a href="{% url 'profesor_editar_materia' elemento.id %}"
+                                       class="ep-edit-button">
+                                        Editar
+                                    </a>
+
+                                    <form method="POST"
+                                          action="{% url 'profesor_estado_materia' elemento.id %}">
+                                        {% csrf_token %}
+                                        <button type="submit"
+                                                class="ep-toggle-button">
+                                            {% if elemento.activa %}Desactivar{% else %}Activar{% endif %}
+                                        </button>
+                                    </form>
+
+                                {% elif tipo_lista == "temas" %}
+                                    <a href="{% url 'profesor_editar_tema' elemento.id %}"
+                                       class="ep-edit-button">
+                                        Editar
+                                    </a>
+
+                                    <form method="POST"
+                                          action="{% url 'profesor_estado_tema' elemento.id %}">
+                                        {% csrf_token %}
+                                        <button type="submit"
+                                                class="ep-toggle-button">
+                                            {% if elemento.activo %}Desactivar{% else %}Activar{% endif %}
+                                        </button>
+                                    </form>
+
+                                {% elif tipo_lista == "habilidades" %}
+                                    <a href="{% url 'profesor_editar_habilidad' elemento.id %}"
+                                       class="ep-edit-button">
+                                        Editar
+                                    </a>
+
+                                    <form method="POST"
+                                          action="{% url 'profesor_estado_habilidad' elemento.id %}">
+                                        {% csrf_token %}
+                                        <button type="submit"
+                                                class="ep-toggle-button">
+                                            {% if elemento.activa %}Desactivar{% else %}Activar{% endif %}
+                                        </button>
+                                    </form>
+                                {% endif %}
+
+                            </div>
+
+                        </article>
+
+                    {% endfor %}
+
+                </div>
+
+            {% else %}
+
+                <div class="ep-empty">
+                    <h3>No hay registros disponibles</h3>
+                    <p>
+                        Puedes comenzar agregando un nuevo registro
+                        con el botón correspondiente.
+                    </p>
+                </div>
+
+            {% endif %}
+
+        </section>
+
+        <footer class="ep-footer">
+            <span>© 2026 EduPlatform</span>
+            <span>Plataforma de Aprendizaje</span>
+        </footer>
+
+    </main>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,163 @@
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ titulo_pagina }} | EduPlatform</title>
+    <link rel="stylesheet" href="{% static 'css/panel_profesor.css' %}?v=6">
+</head>
+<body>
+
+<div class="ep-dashboard">
+
+    {% include "profesores/partials/menu_lateral.html" %}
+
+    <main class="ep-main">
+
+        <header class="ep-header">
+            <div class="ep-breadcrumb">
+                Plataforma / Profesor / Resultados académicos
+            </div>
+
+            <div class="ep-header-profile">
+                <div class="ep-avatar">
+                    {{ request.user.username|first|upper }}
+                </div>
+                <span>{{ request.user.username }}</span>
+            </div>
+        </header>
+
+        <section class="ep-welcome">
+            <div>
+                <span class="ep-section-label">RESULTADOS ACADÉMICOS</span>
+                <h1>{{ titulo_pagina }}</h1>
+                <p>
+                    Consulta el desempeño de tus estudiantes a partir de las
+                    evaluaciones que has creado.
+                </p>
+            </div>
+        </section>
+
+        <section class="q-card">
+
+            <div class="q-card-heading">
+                <div class="q-heading-icon">01</div>
+                <div>
+                    <h2>Desempeño de los estudiantes</h2>
+                    <p>
+                        Resultados obtenidos en las evaluaciones finalizadas.
+                    </p>
+                </div>
+            </div>
+
+            {% if resultados %}
+
+                <div class="ep-academic-list">
+
+                    {% for resultado in resultados %}
+
+                        <article class="ep-result-card">
+
+                            <div class="ep-result-header">
+                                <div>
+                                    <h3>
+                                        {% if tipo_resultado == "materia" %}
+                                            {{ resultado.materia.nombre }}
+                                        {% elif tipo_resultado == "tema" %}
+                                            {{ resultado.tema.nombre }}
+                                        {% elif tipo_resultado == "habilidad" %}
+                                            {{ resultado.habilidad.nombre }}
+                                        {% endif %}
+                                    </h3>
+
+                                    <span class="ep-recommendation-type">
+                                        {% if tipo_resultado == "materia" %}
+                                            Resultado por materia
+                                        {% elif tipo_resultado == "tema" %}
+                                            Resultado por tema
+                                        {% elif tipo_resultado == "habilidad" %}
+                                            Resultado por habilidad
+                                        {% endif %}
+                                    </span>
+                                </div>
+
+                                <span class="ep-result-percentage">
+                                    {{ resultado.porcentaje|floatformat:1 }}%
+                                </span>
+                            </div>
+
+                            {% if tipo_resultado == "tema" %}
+                                <p class="ep-result-description">
+                                    Materia: {{ resultado.tema.materia.nombre }}
+                                </p>
+                            {% endif %}
+
+                            <div class="ep-result-progress">
+                                <div
+                                    class="ep-result-progress-fill"
+                                    style="width: {{ resultado.porcentaje }}%;"
+                                ></div>
+                            </div>
+
+                            <div class="ep-result-details">
+
+                                <span>
+                                    <strong>Estudiante:</strong>
+                                    {{ resultado.intento.estudiante.get_full_name|default:resultado.intento.estudiante.username }}
+                                </span>
+
+                                <span>
+                                    <strong>Evaluación:</strong>
+                                    {{ resultado.intento.evaluacion.titulo }}
+                                </span>
+
+                                <span>
+                                    <strong>Puntaje obtenido:</strong>
+                                    {{ resultado.puntaje_obtenido }}
+                                </span>
+
+                                <span>
+                                    <strong>Puntaje máximo:</strong>
+                                    {{ resultado.puntaje_maximo }}
+                                </span>
+
+                                <span>
+                                    <strong>Fecha:</strong>
+                                    {{ resultado.fecha_calculo|date:"d/m/Y H:i" }}
+                                </span>
+
+                            </div>
+
+                        </article>
+
+                    {% endfor %}
+
+                </div>
+
+            {% else %}
+
+                <div class="ep-empty">
+                    <h3>No hay resultados disponibles</h3>
+                    <p>
+                        Cuando tus estudiantes finalicen tus evaluaciones
+                        y se calculen sus resultados, podrás consultarlos
+                        en esta sección.
+                    </p>
+                </div>
+
+            {% endif %}
+
+        </section>
+
+        <footer class="ep-footer">
+            <span>© 2026 EduPlatform</span>
+            <span>Plataforma de Aprendizaje</span>
+        </footer>
+
+    </main>
+</div>
+
+</body>
+</html>

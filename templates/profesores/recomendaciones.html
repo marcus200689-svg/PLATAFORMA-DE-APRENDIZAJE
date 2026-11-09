@@ -1,0 +1,145 @@
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ titulo_pagina }} | EduPlatform</title>
+    <link rel="stylesheet" href="{% static 'css/panel_profesor.css' %}?v=6">
+</head>
+<body>
+
+<div class="ep-dashboard">
+
+    <!-- MENU LATERAL COMPARTIDO -->
+    {% include "profesores/partials/menu_lateral.html" %}
+
+    <!-- CONTENIDO PRINCIPAL -->
+    <main class="ep-main">
+
+        <header class="ep-header">
+            <div class="ep-breadcrumb">
+                Plataforma / Profesor / Recomendaciones
+            </div>
+
+            <div class="ep-header-profile">
+                <div class="ep-avatar">
+                    {{ request.user.username|first|upper }}
+                </div>
+                <span>{{ request.user.username }}</span>
+            </div>
+        </header>
+
+        <!-- ENCABEZADO -->
+        <section class="ep-welcome">
+            <div>
+                <span class="ep-section-label">RECOMENDACIONES</span>
+                <h1>{{ titulo_pagina }}</h1>
+                <p>
+                    Consulta las recomendaciones generadas para los estudiantes
+                    a partir de tus evaluaciones finalizadas.
+                </p>
+            </div>
+        </section>
+
+        <!-- LISTADO DE RECOMENDACIONES -->
+        <section class="q-card">
+
+            <div class="q-card-heading">
+                <div class="q-heading-icon">01</div>
+                <div>
+                    <h2>Recomendaciones de estudiantes</h2>
+                    <p>Seguimiento de las necesidades de aprendizaje detectadas.</p>
+                </div>
+            </div>
+
+            {% if recomendaciones %}
+                <div class="ep-academic-list">
+
+                    {% for recomendacion in recomendaciones %}
+                        <article class="ep-recommendation-card">
+
+                            <div class="ep-recommendation-header">
+                                <div>
+                                    <h3>{{ recomendacion.titulo }}</h3>
+                                    <span class="ep-recommendation-type">
+                                        {{ recomendacion.get_tipo_display }}
+                                    </span>
+                                </div>
+
+                                <span class="ep-priority ep-priority-{{ recomendacion.prioridad }}">
+                                    {{ recomendacion.get_prioridad_display }}
+                                </span>
+                            </div>
+
+                            <p class="ep-recommendation-description">
+                                {{ recomendacion.descripcion }}
+                            </p>
+
+                            <div class="ep-recommendation-details">
+                                <span>
+                                    <strong>Estudiante:</strong>
+                                    {{ recomendacion.estudiante.get_full_name|default:recomendacion.estudiante.username }}
+                                </span>
+
+                                <span>
+                                    <strong>Evaluación:</strong>
+                                    {{ recomendacion.intento.evaluacion.titulo }}
+                                </span>
+
+                                {% if recomendacion.tema %}
+                                    <span>
+                                        <strong>Tema:</strong>
+                                        {{ recomendacion.tema.nombre }}
+                                    </span>
+                                {% endif %}
+
+                                {% if recomendacion.habilidad %}
+                                    <span>
+                                        <strong>Habilidad:</strong>
+                                        {{ recomendacion.habilidad.nombre }}
+                                    </span>
+                                {% endif %}
+
+                                {% if recomendacion.porcentaje_referencia != None %}
+                                    <span>
+                                        <strong>Porcentaje de referencia:</strong>
+                                        {{ recomendacion.porcentaje_referencia }}%
+                                    </span>
+                                {% endif %}
+
+                                <span>
+                                    <strong>Fecha:</strong>
+                                    {{ recomendacion.fecha_creacion|date:"d/m/Y H:i" }}
+                                </span>
+                            </div>
+
+                        </article>
+                    {% endfor %}
+
+                </div>
+
+            {% else %}
+                <div class="ep-empty">
+                    <h3>No hay recomendaciones disponibles</h3>
+                    <p>
+                        Cuando tus estudiantes finalicen evaluaciones y se generen
+                        recomendaciones, podrás consultarlas en esta sección.
+                    </p>
+                </div>
+            {% endif %}
+
+        </section>
+
+        <!-- PIE DE PAGINA -->
+        <footer class="ep-footer">
+            <span>© 2026 EduPlatform</span>
+            <span>Plataforma de Aprendizaje</span>
+        </footer>
+
+    </main>
+</div>
+
+</body>
+</html>
