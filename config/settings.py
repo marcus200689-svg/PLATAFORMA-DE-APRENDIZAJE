@@ -60,7 +60,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "config.wsgi.application"
 
-# Base de datos temporal
+
 # Más adelante configuraremos MySQL.
 DATABASES = {
     "default": {
@@ -131,6 +131,6 @@ STATICFILES_DIRS = [
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # Configuración de inicio y cierre de sesión
-LOGIN_URL = "login"
+LOGIN_URL = "usuarios:login"
 LOGIN_REDIRECT_URL = "inicio"
 LOGOUT_REDIRECT_URL = "inicio"

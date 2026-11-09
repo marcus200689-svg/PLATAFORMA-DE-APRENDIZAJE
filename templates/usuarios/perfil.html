@@ -133,7 +133,7 @@
                     dentro de la plataforma.
                 </p>
 
-                <form method="post" action="{% url 'cerrar_sesion' %}">
+                <form method="post" action="{% url 'usuarios:cerrar_sesion' %}
                     {% csrf_token %}
                     <button type="submit" class="boton boton-secundario">
                         Cerrar sesión

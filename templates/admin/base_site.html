@@ -1,0 +1,25 @@
+
+{% extends "admin/base.html" %}
+{% load static %}
+
+{% block title %}
+Administración | EduPlatform
+{% endblock %}
+
+{% block branding %}
+<div id="site-name">
+    <a href="{% url 'admin:index' %}">
+        <span class="brand-icon">E</span>
+        <span class="brand-name">EduPlatform</span>
+        <span class="brand-subtitle">Administración</span>
+    </a>
+</div>
+{% endblock %}
+
+{% block extrastyle %}
+    {{ block.super }}
+    <link rel="stylesheet" href="{% static 'css/admin_custom.css' %}">
+{% endblock %}
+
+{% block nav-global %}
+{% endblock %}

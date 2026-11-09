@@ -22,3 +22,16 @@ class Usuario(AbstractUser):
 
     def __str__(self):
         return f"{self.username} ({self.get_rol_display()})"
+
+class Docente(Usuario):
+    class Meta:
+        proxy = True
+        verbose_name = "Docente"
+        verbose_name_plural = "Docentes"
+
+
+class Estudiante(Usuario):
+    class Meta:
+        proxy = True
+        verbose_name = "Alumno registrado"
+        verbose_name_plural = "Alumnos registrados"

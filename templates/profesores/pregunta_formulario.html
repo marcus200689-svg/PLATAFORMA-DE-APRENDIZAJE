@@ -1,0 +1,302 @@
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ titulo_pagina }} | EduPlatform</title>
+    <link rel="stylesheet" href="{% static 'css/panel_profesor.css' %}?v=4">
+</head>
+
+<body>
+
+<div class="ep-dashboard">
+
+    <!-- MENU LATERAL -->
+    <aside class="ep-sidebar">
+
+        <div class="ep-brand">
+            <div class="ep-brand-icon">E</div>
+            <div>
+                <h2>EduPlatform</h2>
+                <span>Plataforma educativa</span>
+            </div>
+        </div>
+
+        <div class="ep-menu-title">MENÚ PRINCIPAL</div>
+
+        <nav class="ep-navigation">
+
+            <a href="{% url 'evaluaciones:profesor_lista' %}" class="ep-nav-link">
+                <span class="ep-nav-icon">⌂</span>
+                <span>Inicio</span>
+            </a>
+
+            <a href="{% url 'evaluaciones:profesor_crear' %}" class="ep-nav-link">
+                <span class="ep-nav-icon">＋</span>
+                <span>Crear evaluación</span>
+            </a>
+
+            <a href="{% url 'evaluaciones:profesor_lista' %}" class="ep-nav-link ep-selected">
+                <span class="ep-nav-icon">▤</span>
+                <span>Mis evaluaciones</span>
+            </a>
+
+        </nav>
+
+        <div class="ep-sidebar-bottom">
+            <div class="ep-help-icon">?</div>
+            <div>
+                <strong>Panel del profesor</strong>
+                <span>Administración docente</span>
+            </div>
+        </div>
+
+        <form method="POST"
+      action="{% url 'usuarios:cerrar_sesion' %}"
+      class="ep-logout-form">
+
+    {% csrf_token %}
+
+    <button type="submit" class="ep-logout-button">
+        <span>↗</span>
+        <span>Cerrar sesión</span>
+    </button>
+
+</form>
+
+    </aside>
+
+
+    <!-- CONTENIDO PRINCIPAL -->
+    <main class="ep-main">
+
+        <header class="ep-header">
+            <div class="ep-breadcrumb">
+                Plataforma / Profesor / Preguntas
+            </div>
+
+            <div class="ep-header-profile">
+                <div class="ep-avatar">
+                    {{ request.user.username|first|upper }}
+                </div>
+                <span>{{ request.user.username }}</span>
+            </div>
+        </header>
+
+
+        <!-- ENCABEZADO -->
+        <section class="ep-welcome">
+
+            <div>
+                <span class="ep-section-label">GESTIÓN ACADÉMICA</span>
+
+                <h1>{{ titulo_pagina }}</h1>
+
+                <p>
+                    Administra las preguntas y opciones de respuesta
+                    de tu evaluación.
+                </p>
+            </div>
+
+        </section>
+
+
+        <!-- INFORMACIÓN DE LA EVALUACIÓN -->
+        <div class="q-evaluation-info">
+            <div class="q-info-icon">▤</div>
+
+            <div>
+                <span>Evaluación seleccionada</span>
+                <h3>{{ evaluacion.titulo }}</h3>
+            </div>
+        </div>
+
+
+        <!-- MENSAJES -->
+        {% if messages %}
+            {% for message in messages %}
+                <div class="ep-message">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+
+
+        <!-- FORMULARIO -->
+        <form method="post" class="q-form">
+
+            {% csrf_token %}
+
+            {{ form.non_field_errors }}
+
+            <!-- DATOS DE LA PREGUNTA -->
+            <section class="q-card">
+
+                <div class="q-card-heading">
+                    <div class="q-heading-icon">01</div>
+
+                    <div>
+                        <h2>Información de la pregunta</h2>
+                        <p>
+                            Completa los datos principales de la pregunta.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="q-fields">
+
+                    {% for campo in form %}
+
+                        <div class="q-field">
+
+                            <label for="{{ campo.id_for_label }}">
+                                {{ campo.label }}
+                            </label>
+
+                            {{ campo }}
+
+                            {% for error in campo.errors %}
+                                <p class="q-error">{{ error }}</p>
+                            {% endfor %}
+
+                        </div>
+
+                    {% endfor %}
+
+                </div>
+
+            </section>
+
+
+            <!-- OPCIONES DE RESPUESTA -->
+            <section class="q-card">
+
+                <div class="q-card-heading">
+
+                    <div class="q-heading-icon">02</div>
+
+                    <div>
+                        <h2>Opciones de respuesta</h2>
+                        <p>
+                            Registra al menos dos opciones y marca
+                            exactamente una como correcta.
+                        </p>
+                    </div>
+
+                </div>
+
+                {{ formset.management_form }}
+                {{ formset.non_form_errors }}
+
+                <div class="q-options-container">
+
+                    {% for opcion_form in formset %}
+
+                        <div class="q-option-card">
+
+                            <div class="q-option-heading">
+                                <div class="q-option-number">
+                                    {{ forloop.counter }}
+                                </div>
+
+                                <h3>Opción de respuesta {{ forloop.counter }}</h3>
+                            </div>
+
+                            {{ opcion_form.id }}
+                            {{ opcion_form.non_field_errors }}
+
+                            <div class="q-fields">
+
+                                {% for campo in opcion_form %}
+
+                                    {% if campo.name != "DELETE" and campo.name != "id" %}
+
+                                        <div class="q-field
+                                            {% if campo.field.widget.input_type == 'checkbox' %}q-checkbox-field{% endif %}">
+
+                                            {% if campo.field.widget.input_type == 'checkbox' %}
+
+                                                <label class="q-checkbox-label"
+                                                       for="{{ campo.id_for_label }}">
+                                                    {{ campo }}
+                                                    <span>{{ campo.label }}</span>
+                                                </label>
+
+                                            {% else %}
+
+                                                <label for="{{ campo.id_for_label }}">
+                                                    {{ campo.label }}
+                                                </label>
+
+                                                {{ campo }}
+
+                                            {% endif %}
+
+                                            {% for error in campo.errors %}
+                                                <p class="q-error">{{ error }}</p>
+                                            {% endfor %}
+
+                                        </div>
+
+                                    {% endif %}
+
+                                {% endfor %}
+
+                            </div>
+
+                            {% if opcion_form.instance.pk %}
+
+                                <div class="q-delete-area">
+
+                                    <label class="q-delete-label"
+                                           for="{{ opcion_form.DELETE.id_for_label }}">
+
+                                        {{ opcion_form.DELETE }}
+
+                                        <span>Eliminar esta opción</span>
+
+                                    </label>
+
+                                </div>
+
+                            {% endif %}
+
+                        </div>
+
+                    {% endfor %}
+
+                </div>
+
+            </section>
+
+
+            <!-- BOTONES -->
+            <div class="q-form-actions">
+
+                <a class="q-cancel-button"
+                   href="{% url 'evaluaciones:profesor_preguntas' evaluacion.id %}">
+                    Cancelar
+                </a>
+
+                <button type="submit" class="q-save-button">
+                    <span>✓</span> Guardar pregunta
+                </button>
+
+            </div>
+
+        </form>
+
+
+        <footer class="ep-footer">
+            <span>© 2026 EduPlatform</span>
+            <span>Plataforma de Aprendizaje</span>
+        </footer>
+
+    </main>
+
+</div>
+
+</body>
+</html>

@@ -1,10 +1,14 @@
 
+from functools import wraps
+
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.core.exceptions import ValidationError
+from django.core.exceptions import PermissionDenied, ValidationError
 from django.db import transaction
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views.decorators.http import require_POST
+
+from apps.usuarios.models import Usuario
 
 from .models import (
     Evaluacion,
@@ -17,7 +21,30 @@ from .services import finalizar_evaluacion, validar_evaluacion
 from apps.resultados.services import generar_resultados
 from apps.recomendaciones.services import generar_recomendaciones
 
+
+def requiere_estudiante(vista):
+    """Permite el acceso únicamente a cuentas de estudiantes."""
+
+    @wraps(vista)
+    def vista_protegida(request, *args, **kwargs):
+        usuario = request.user
+
+        if (
+            usuario.rol != Usuario.Rol.ESTUDIANTE
+            or usuario.is_staff
+            or usuario.is_superuser
+        ):
+            raise PermissionDenied(
+                "Esta sección está disponible únicamente para estudiantes."
+            )
+
+        return vista(request, *args, **kwargs)
+
+    return vista_protegida
+
+
 @login_required
+@requiere_estudiante
 def lista_evaluaciones(request):
     evaluaciones = (
         Evaluacion.objects.filter(activa=True)
@@ -33,6 +60,7 @@ def lista_evaluaciones(request):
 
 
 @login_required
+@requiere_estudiante
 @require_POST
 def iniciar_evaluacion(request, evaluacion_id):
     evaluacion = get_object_or_404(
@@ -46,6 +74,7 @@ def iniciar_evaluacion(request, evaluacion_id):
     except ValidationError as error:
         for mensaje in error.messages:
             messages.error(request, mensaje)
+
         return redirect("evaluaciones:lista")
 
     intento = IntentoEvaluacion.objects.create(
@@ -60,6 +89,7 @@ def iniciar_evaluacion(request, evaluacion_id):
 
 
 @login_required
+@requiere_estudiante
 def resolver_evaluacion(request, intento_id):
     intento = get_object_or_404(
         IntentoEvaluacion.objects.select_related(
@@ -97,6 +127,7 @@ def resolver_evaluacion(request, intento_id):
 
 
 @login_required
+@requiere_estudiante
 @require_POST
 @transaction.atomic
 def enviar_respuestas(request, intento_id):
@@ -142,21 +173,23 @@ def enviar_respuestas(request, intento_id):
         finalizar_evaluacion(intento)
         generar_resultados(intento.pk)
         generar_recomendaciones(intento.pk)
-        
+
     except ValidationError as error:
         transaction.set_rollback(True)
-        
+
         for mensaje in error.messages:
             messages.error(request, mensaje)
-            
-            return redirect("evaluaciones:resolver",intento_id=intento.pk,
-            
-            )
-            
+
+        return redirect(
+            "evaluaciones:resolver",
+            intento_id=intento.pk,
+        )
+
     messages.success(
         request,
         "Tu evaluación se calificó y los resultados fueron generados correctamente.",
     )
+
     return redirect(
         "evaluaciones:resultado",
         intento_id=intento.pk,
@@ -164,6 +197,7 @@ def enviar_respuestas(request, intento_id):
 
 
 @login_required
+@requiere_estudiante
 def resultado_evaluacion(request, intento_id):
     intento = get_object_or_404(
         IntentoEvaluacion.objects.select_related(

@@ -5,67 +5,271 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Administrar evaluaciones</title>
-    <link rel="stylesheet" href="{% static 'css/panel_profesor.css' %}">
-</head>
-<body>
-    <main class="main-content">
-        <h1>Mis evaluaciones</h1>
-        <p>Consulta y administra las evaluaciones de la plataforma.</p>
 
+    <title>Mis evaluaciones | Plataforma de Aprendizaje</title>
+
+    <link rel="stylesheet" href="{% static 'css/panel_profesor.css' %}?v=4">
+</head>
+
+<body>
+
+<div class="ep-dashboard">
+
+    <!-- MENU LATERAL -->
+    <aside class="ep-sidebar">
+
+        <div class="ep-brand">
+            <div class="ep-brand-icon">E</div>
+
+            <div>
+                <h2>EduPlatform</h2>
+                <span>Plataforma educativa</span>
+            </div>
+        </div>
+
+        <div class="ep-menu-title">MENÚ PRINCIPAL</div>
+
+        <nav class="ep-navigation">
+
+          
+            <a href="{% url 'evaluaciones:profesor_lista' %}" class="ep-nav-link">
+                <span class="ep-nav-icon">⌂</span>
+                <span>Inicio</span>
+            </a>
+
+            <a href="{% url 'evaluaciones:profesor_crear' %}" class="ep-nav-link">
+                <span class="ep-nav-icon">＋</span>
+                <span>Crear evaluación</span>
+            </a>
+
+            <a href="{% url 'evaluaciones:profesor_lista' %}" class="ep-nav-link ep-selected">
+                <span class="ep-nav-icon">▤</span>
+                <span>Mis evaluaciones</span>
+            </a>
+
+        </nav>
+
+        <div class="ep-sidebar-bottom">
+            <div class="ep-help-icon">?</div>
+
+            <div>
+                <strong>Panel del profesor</strong>
+                <span>Administración docente</span>
+            </div>
+        </div>
+
+        <form method="POST"
+      action="{% url 'usuarios:cerrar_sesion' %}"
+      class="ep-logout-form">
+
+    {% csrf_token %}
+
+    <button type="submit" class="ep-logout-button">
+        <span>↗</span>
+        <span>Cerrar sesión</span>
+    </button>
+
+</form>
+
+    </aside>
+
+
+    <!-- CONTENIDO PRINCIPAL -->
+    <main class="ep-main">
+
+        <!-- BARRA SUPERIOR -->
+        <header class="ep-header">
+
+            <div class="ep-breadcrumb">
+                Plataforma / Profesor / Mis evaluaciones
+            </div>
+
+            <div class="ep-header-profile">
+                <div class="ep-avatar">
+                    {{ request.user.username|first|upper }}
+                </div>
+
+                <span>{{ request.user.username }}</span>
+            </div>
+
+        </header>
+
+
+        <!-- TITULO -->
+        <section class="ep-welcome">
+
+            <div>
+                <span class="ep-section-label">GESTIÓN ACADÉMICA</span>
+
+                <h1>Mis evaluaciones</h1>
+
+                <p>
+                    Organiza, consulta y administra tus evaluaciones académicas.
+                </p>
+            </div>
+
+            <a href="{% url 'evaluaciones:profesor_crear' %}"
+               class="ep-create-button">
+                <span>＋</span> Crear evaluación
+            </a>
+
+        </section>
+
+
+        <!-- MENSAJES -->
         {% if messages %}
             {% for message in messages %}
-                <p class="mensaje">{{ message }}</p>
+                <div class="ep-message">
+                    {{ message }}
+                </div>
             {% endfor %}
         {% endif %}
 
-        <p>
-            <a href="{% url 'evaluaciones:profesor_crear' %}">
-                + Crear evaluación
-            </a>
-        </p>
 
-        {% if evaluaciones %}
-            <div class="tabla-contenedor">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Título</th>
-                            <th>Materia</th>
-                            <th>Estado</th>
-                            <th>Fecha de creación</th>
-                            <th>Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for evaluacion in evaluaciones %}
-                            <tr>
-                                <td>{{ evaluacion.titulo }}</td>
-                                <td>{{ evaluacion.materia }}</td>
-                                <td>
-                                    {% if evaluacion.activa %}
-                                        Activa
-                                    {% else %}
-                                        Inactiva
-                                    {% endif %}
-                                </td>
-                                <td>{{ evaluacion.fecha_creacion|date:"d/m/Y" }}</td>
-                                <td>
-                                    <a href="{% url 'evaluaciones:profesor_editar' evaluacion.id %}">
-                                        Editar
-                                    </a>
-                                </td>
-                            </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
+        <!-- LISTADO DE EVALUACIONES -->
+        <section class="ep-content-card">
+
+            <div class="ep-card-heading">
+
+                <div>
+                    <h2>Listado de evaluaciones</h2>
+
+                    <p>
+                        Consulta la información de tus evaluaciones registradas.
+                    </p>
+                </div>
+
+                <div class="ep-card-icon">▤</div>
+
             </div>
-        {% else %}
-            <p>Todavía no hay evaluaciones creadas por ti.</p>
-            <p>Selecciona "Crear evaluación" para registrar la primera.</p>
-        {% endif %}
 
-        <p><a href="{% url 'panel_profesor' %}">Volver al panel</a></p>
+
+            {% if evaluaciones %}
+
+                <div class="ep-table-wrapper">
+
+                    <table class="ep-table">
+
+                        <thead>
+                            <tr>
+                                <th>TÍTULO</th>
+                                <th>MATERIA</th>
+                                <th>ESTADO</th>
+                                <th>FECHA DE CREACIÓN</th>
+                                <th>ACCIONES</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+
+                            {% for evaluacion in evaluaciones %}
+
+                                <tr>
+
+                                    <td>
+                                        <div class="ep-evaluation-name">
+
+                                            <div class="ep-subject-icon">
+                                                E
+                                            </div>
+
+                                            <strong>
+                                                {{ evaluacion.titulo }}
+                                            </strong>
+
+                                        </div>
+                                    </td>
+
+                                    <td>
+                                        <span class="ep-subject">
+                                            {{ evaluacion.materia.nombre }}
+                                        </span>
+                                    </td>
+
+                                    <td>
+
+                                        {% if evaluacion.activa %}
+
+                                            <span class="ep-status ep-active">
+                                                <span></span> Activa
+                                            </span>
+
+                                        {% else %}
+
+                                            <span class="ep-status ep-inactive">
+                                                <span></span> Inactiva
+                                            </span>
+
+                                        {% endif %}
+
+                                    </td>
+
+                                    <td class="ep-date">
+                                        {{ evaluacion.fecha_creacion|date:"d/m/Y" }}
+                                    </td>
+
+                                    <td>
+
+                                        <div class="ep-actions">
+
+                                            <a class="ep-edit-button"
+                                               href="{% url 'evaluaciones:profesor_editar' evaluacion.id %}">
+                                                Editar
+                                            </a>
+
+                                            <a class="ep-questions-button"
+                                               href="{% url 'evaluaciones:profesor_preguntas' evaluacion.id %}">
+                                                Preguntas
+                                            </a>
+
+                                        </div>
+
+                                    </td>
+
+                                </tr>
+
+                            {% endfor %}
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            {% else %}
+
+                <div class="ep-empty">
+
+                    <div class="ep-empty-icon">▤</div>
+
+                    <h3>No hay evaluaciones todavía</h3>
+
+                    <p>
+                        Aún no has creado evaluaciones.
+                        Comienza registrando tu primera evaluación.
+                    </p>
+
+                    <a href="{% url 'evaluaciones:profesor_crear' %}"
+                       class="ep-create-button">
+                        ＋ Crear primera evaluación
+                    </a>
+
+                </div>
+
+            {% endif %}
+
+        </section>
+
+
+        <!-- PIE DE PAGINA -->
+        <footer class="ep-footer">
+            <span>© 2026 EduPlatform</span>
+            <span>Plataforma de Aprendizaje</span>
+        </footer>
+
     </main>
+
+</div>
+
 </body>
 </html>

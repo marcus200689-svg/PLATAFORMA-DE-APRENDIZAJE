@@ -1,0 +1,361 @@
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Preguntas de la evaluación | EduPlatform</title>
+    <link rel="stylesheet" href="{% static 'css/panel_profesor.css' %}?v=5">
+</head>
+
+<body>
+
+<div class="ep-dashboard">
+
+    <!-- BARRA LATERAL -->
+    <aside class="ep-sidebar">
+
+        <div class="ep-brand">
+            <div class="ep-brand-icon">E</div>
+            <div>
+                <h2>EduPlatform</h2>
+                <span>Plataforma educativa</span>
+            </div>
+        </div>
+
+        <div class="ep-menu-title">MENÚ PRINCIPAL</div>
+
+        <nav class="ep-navigation">
+
+            <a href="{% url 'evaluaciones:profesor_lista' %}" class="ep-nav-link">
+                <span class="ep-nav-icon">⌂</span>
+                <span>Inicio</span>
+            </a>
+
+            <a href="{% url 'evaluaciones:profesor_crear' %}" class="ep-nav-link">
+                <span class="ep-nav-icon">＋</span>
+                <span>Crear evaluación</span>
+            </a>
+
+            <a href="{% url 'evaluaciones:profesor_lista' %}"
+               class="ep-nav-link ep-selected">
+                <span class="ep-nav-icon">▤</span>
+                <span>Mis evaluaciones</span>
+            </a>
+
+        </nav>
+
+        <div class="ep-sidebar-bottom">
+            <div class="ep-help-icon">?</div>
+            <div>
+                <strong>Panel del profesor</strong>
+                <span>Administración docente</span>
+            </div>
+        </div>
+
+        <form method="POST"
+      action="{% url 'usuarios:cerrar_sesion' %}"
+      class="ep-logout-form">
+
+    {% csrf_token %}
+
+    <button type="submit" class="ep-logout-button">
+        <span>↗</span>
+        <span>Cerrar sesión</span>
+    </button>
+
+</form>
+
+    </aside>
+
+
+    <!-- CONTENIDO PRINCIPAL -->
+    <main class="ep-main">
+
+        <!-- ENCABEZADO SUPERIOR -->
+        <header class="ep-header">
+
+            <div class="ep-breadcrumb">
+                Plataforma / Profesor / Mis evaluaciones / Preguntas
+            </div>
+
+            <div class="ep-header-profile">
+                <div class="ep-avatar">
+                    {{ request.user.username|first|upper }}
+                </div>
+                <span>{{ request.user.username }}</span>
+            </div>
+
+        </header>
+
+
+        <!-- TITULO -->
+        <section class="ep-welcome">
+
+            <div>
+                <span class="ep-section-label">GESTIÓN ACADÉMICA</span>
+
+                <h1>Preguntas de la evaluación</h1>
+
+                <p>
+                    Consulta, organiza y administra las preguntas
+                    de tu evaluación.
+                </p>
+            </div>
+
+            <a class="ep-create-button"
+               href="{% url 'evaluaciones:profesor_crear_pregunta' evaluacion.id %}">
+                <span>＋</span> Agregar pregunta
+            </a>
+
+        </section>
+
+
+        <!-- INFORMACION DE LA EVALUACION -->
+        <section class="pq-evaluation-card">
+
+            <div class="pq-evaluation-icon">▤</div>
+
+            <div class="pq-evaluation-details">
+                <span>EVALUACIÓN SELECCIONADA</span>
+
+                <h2>{{ evaluacion.titulo }}</h2>
+
+                <p>
+                    <strong>Materia:</strong>
+                    {{ evaluacion.materia.nombre }}
+                </p>
+            </div>
+
+        </section>
+
+
+        <!-- MENSAJES -->
+        {% if messages %}
+            {% for message in messages %}
+                <div class="ep-message">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+
+
+        <!-- ENCABEZADO DE PREGUNTAS -->
+        <section class="pq-section">
+
+            <div class="pq-section-heading">
+                <div>
+                    <h2>Listado de preguntas</h2>
+                    <p>
+                        Revisa el contenido, puntaje y opciones de respuesta.
+                    </p>
+                </div>
+            </div>
+
+
+            <!-- LISTADO DE PREGUNTAS -->
+            {% for pregunta in preguntas %}
+
+                <article class="pq-question-card">
+
+                    <!-- ENCABEZADO DE CADA PREGUNTA -->
+                    <div class="pq-question-header">
+
+                        <div class="pq-question-title">
+
+                            <div class="pq-number">
+                                {{ forloop.counter|stringformat:"02d" }}
+                            </div>
+
+                            <div>
+                                <span class="pq-question-label">
+                                    PREGUNTA {{ forloop.counter }}
+                                </span>
+
+                                <h3>{{ pregunta.enunciado }}</h3>
+                            </div>
+
+                        </div>
+
+                        <div class="pq-question-status">
+
+                            {% if pregunta.es_provisional %}
+
+                                <span class="pq-badge pq-provisional">
+                                    Provisional
+                                </span>
+
+                            {% else %}
+
+                                <span class="pq-badge pq-definitiva">
+                                    Definitiva
+                                </span>
+
+                            {% endif %}
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- INFORMACION -->
+                    <div class="pq-metadata">
+
+                        <div class="pq-meta-item">
+                            <span class="pq-meta-icon">▧</span>
+
+                            <div>
+                                <small>Tema</small>
+
+                                <strong>
+                                    {{ pregunta.tema|default:"Sin tema asignado" }}
+                                </strong>
+                            </div>
+                        </div>
+
+                        <div class="pq-meta-item">
+                            <span class="pq-meta-icon">★</span>
+
+                            <div>
+                                <small>Puntaje</small>
+
+                                <strong>
+                                    {{ pregunta.puntaje }}
+                                </strong>
+                            </div>
+                        </div>
+
+                    </div>
+
+
+                    <!-- HABILIDADES -->
+                    <div class="pq-details-section">
+
+                        <h4>Habilidades relacionadas</h4>
+
+                        <div class="pq-skills">
+
+                            {% for habilidad in pregunta.habilidades.all %}
+
+                                <span class="pq-skill">
+                                    {{ habilidad.nombre }}
+                                </span>
+
+                            {% empty %}
+
+                                <span class="pq-no-data">
+                                    Sin habilidades asignadas
+                                </span>
+
+                            {% endfor %}
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- OPCIONES DE RESPUESTA -->
+                    <div class="pq-details-section">
+
+                        <h4>Opciones de respuesta</h4>
+
+                        <div class="pq-answers">
+
+                            {% for opcion in pregunta.opciones.all %}
+
+                                <div class="pq-answer">
+
+                                    <div class="pq-answer-content">
+                                        <span class="pq-answer-dot"></span>
+
+                                        <span>
+                                            {{ opcion.texto }}
+                                        </span>
+                                    </div>
+
+                                    {% if opcion.es_correcta %}
+
+                                        <span class="pq-correct">
+                                            ✓ Correcta
+                                        </span>
+
+                                    {% endif %}
+
+                                </div>
+
+                            {% empty %}
+
+                                <p class="pq-no-data">
+                                    Sin opciones registradas.
+                                </p>
+
+                            {% endfor %}
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- ACCIONES -->
+                    <div class="pq-card-footer">
+
+                        <a class="pq-edit-button"
+                           href="{% url 'evaluaciones:profesor_editar_pregunta' evaluacion.id pregunta.id %}">
+                            ✎ Editar pregunta
+                        </a>
+
+                    </div>
+
+                </article>
+
+
+            {% empty %}
+
+                <!-- CUANDO NO EXISTEN PREGUNTAS -->
+                <div class="pq-empty">
+
+                    <div class="pq-empty-icon">▤</div>
+
+                    <h3>Esta evaluación aún no tiene preguntas</h3>
+
+                    <p>
+                        Comienza agregando preguntas para completar
+                        tu evaluación académica.
+                    </p>
+
+                    <a class="ep-create-button"
+                       href="{% url 'evaluaciones:profesor_crear_pregunta' evaluacion.id %}">
+                        ＋ Agregar primera pregunta
+                    </a>
+
+                </div>
+
+            {% endfor %}
+
+        </section>
+
+
+        <!-- VOLVER -->
+        <div class="pq-back-container">
+
+            <a class="pq-back-button"
+               href="{% url 'evaluaciones:profesor_lista' %}">
+                ← Volver a mis evaluaciones
+            </a>
+
+        </div>
+
+
+        <!-- PIE DE PAGINA -->
+        <footer class="ep-footer">
+            <span>© 2026 EduPlatform</span>
+            <span>Plataforma de Aprendizaje</span>
+        </footer>
+
+    </main>
+
+</div>
+
+</body>
+</html>

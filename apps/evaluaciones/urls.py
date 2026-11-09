@@ -7,7 +7,12 @@ from . import profesor_views
 app_name = "evaluaciones"
 
 urlpatterns = [
-    path("", views.lista_evaluaciones, name="lista"),
+    # Evaluaciones para estudiantes
+    path(
+        "",
+        views.lista_evaluaciones,
+        name="lista",
+    ),
 
     path(
         "<int:evaluacion_id>/iniciar/",
@@ -32,17 +37,42 @@ urlpatterns = [
         views.resultado_evaluacion,
         name="resultado",
     ),
+
+    # Administración de evaluaciones para docentes
     path(
         "profesor/",
         profesor_views.profesor_lista_evaluaciones,
-        name="profesor_lista",),
+        name="profesor_lista",
+    ),
+
     path(
         "profesor/crear/",
         profesor_views.profesor_crear_evaluacion,
-        name="profesor_crear",),
+        name="profesor_crear",
+    ),
+
     path(
         "profesor/<int:evaluacion_id>/editar/",
         profesor_views.profesor_editar_evaluacion,
         name="profesor_editar",
+    ),
+
+    # Administración de preguntas
+    path(
+        "profesor/<int:evaluacion_id>/preguntas/",
+        profesor_views.profesor_lista_preguntas,
+        name="profesor_preguntas",
+    ),
+
+    path(
+        "profesor/<int:evaluacion_id>/preguntas/crear/",
+        profesor_views.profesor_crear_pregunta,
+        name="profesor_crear_pregunta",
+    ),
+
+    path(
+        "profesor/<int:evaluacion_id>/preguntas/<int:pregunta_id>/editar/",
+        profesor_views.profesor_editar_pregunta,
+        name="profesor_editar_pregunta",
     ),
 ]

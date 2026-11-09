@@ -12,6 +12,7 @@ from .models import (
 class OpcionRespuestaInline(admin.TabularInline):
     model = OpcionRespuesta
     extra = 2
+    fields = ("texto", "es_correcta", "orden")
 
 
 class PreguntaInline(admin.StackedInline):
@@ -23,10 +24,17 @@ class PreguntaInline(admin.StackedInline):
 
 @admin.register(Evaluacion)
 class EvaluacionAdmin(admin.ModelAdmin):
-    list_display = ("titulo", "materia", "activa", "fecha_creacion")
+    list_display = (
+        "titulo",
+        "materia",
+        "activa",
+        "fecha_creacion",
+    )
     list_filter = ("activa", "materia")
     search_fields = ("titulo", "materia__nombre")
     ordering = ("materia__nombre", "titulo")
+    readonly_fields = ("fecha_creacion",)
+    list_per_page = 15
     inlines = [PreguntaInline]
 
 
@@ -40,17 +48,38 @@ class PreguntaAdmin(admin.ModelAdmin):
         "es_provisional",
         "activa",
     )
-    list_filter = ("activa", "es_provisional", "evaluacion")
-    search_fields = ("enunciado", "evaluacion__titulo")
+    list_filter = (
+        "activa",
+        "es_provisional",
+        "evaluacion",
+        "tema",
+    )
+    search_fields = (
+        "enunciado",
+        "evaluacion__titulo",
+        "tema__nombre",
+    )
     filter_horizontal = ("habilidades",)
+    list_editable = ("activa",)
+    list_per_page = 15
     inlines = [OpcionRespuestaInline]
 
 
 @admin.register(OpcionRespuesta)
 class OpcionRespuestaAdmin(admin.ModelAdmin):
-    list_display = ("texto", "pregunta", "es_correcta", "orden")
+    list_display = (
+        "texto",
+        "pregunta",
+        "es_correcta",
+        "orden",
+    )
     list_filter = ("es_correcta",)
-    search_fields = ("texto", "pregunta__enunciado")
+    search_fields = (
+        "texto",
+        "pregunta__enunciado",
+    )
+    ordering = ("pregunta", "orden")
+    list_per_page = 20
 
 
 @admin.register(IntentoEvaluacion)
@@ -63,13 +92,20 @@ class IntentoEvaluacionAdmin(admin.ModelAdmin):
         "porcentaje",
     )
     list_filter = ("finalizado", "evaluacion")
-    search_fields = ("estudiante__username", "evaluacion__titulo")
+    search_fields = (
+        "estudiante__username",
+        "estudiante__first_name",
+        "estudiante__last_name",
+        "evaluacion__titulo",
+    )
     readonly_fields = (
         "fecha_inicio",
         "fecha_finalizacion",
         "puntaje_obtenido",
         "porcentaje",
     )
+    ordering = ("-fecha_inicio",)
+    list_per_page = 20
 
 
 @admin.register(RespuestaEstudiante)
@@ -82,4 +118,10 @@ class RespuestaEstudianteAdmin(admin.ModelAdmin):
         "fecha_respuesta",
     )
     list_filter = ("es_correcta",)
-    search_fields = ("pregunta__enunciado",)
+    search_fields = (
+        "pregunta__enunciado",
+        "intento__estudiante__username",
+        "intento__evaluacion__titulo",
+    )
+    readonly_fields = ("fecha_respuesta",)
+    list_per_page = 20

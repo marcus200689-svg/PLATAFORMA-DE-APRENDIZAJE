@@ -5,9 +5,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title>Iniciar sesión | Plataforma de Aprendizaje</title>
-
     <link rel="stylesheet" href="{% static 'css/estilos.css' %}">
 </head>
 
@@ -85,17 +83,55 @@
                     {% endif %}
                 </div>
 
-                <button type="submit" class="boton boton-principal boton-login">
+                <!-- Selector de tipo de usuario -->
+                <div class="campo-login">
+                    <label for="rol">
+                        Tipo de usuario
+                    </label>
+
+                    <select
+                        id="rol"
+                        name="rol"
+                        class="campo-input"
+                        required
+                    >
+                        <option value="">Selecciona tu tipo de usuario</option>
+
+                        <option value="estudiante"
+                            {% if rol_solicitado == "estudiante" %}selected{% endif %}>
+                            Estudiante
+                        </option>
+
+                        <option value="docente"
+                            {% if rol_solicitado == "docente" %}selected{% endif %}>
+                            Docente
+                        </option>
+
+                        <option value="administrador"
+                            {% if rol_solicitado == "administrador" %}selected{% endif %}>
+                            Administrador
+                        </option>
+                    </select>
+                </div>
+
+                <button
+                    type="submit"
+                    class="boton boton-principal boton-login"
+                >
                     Entrar a mi cuenta
                     <span aria-hidden="true">→</span>
                 </button>
+
             </form>
 
             <div class="separador-login">
                 <span>¿Primera vez en la plataforma?</span>
             </div>
 
-            <a href="{% url 'registro' %}" class="boton boton-secundario boton-registro">
+            <a
+                href="{% url 'usuarios:registro' %}"
+                class="boton boton-secundario boton-registro"
+            >
                 Crear una cuenta
             </a>
 
